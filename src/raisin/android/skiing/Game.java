@@ -1,4 +1,4 @@
-package raisin.android1;
+package raisin.android.skiing;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+import raisin.android.skiing.R;
 
 import android.content.Context;
 import android.content.res.Resources;

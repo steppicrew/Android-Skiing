@@ -1,4 +1,4 @@
-package raisin.android1;
+package raisin.android.skiing;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.widget.TextView;
 
-public class act1View extends SurfaceView implements SurfaceHolder.Callback, OnKeyListener {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback, OnKeyListener {
 
 	private final class GameThread extends Thread {
 
@@ -105,7 +105,7 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback, OnK
 
     private Context mContext;
     
-    public act1View(Context context, AttributeSet attrs) {
+    public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
     	Log.w("ActView", "constructor");

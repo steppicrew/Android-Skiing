@@ -1,5 +1,6 @@
-package raisin.android1;
+package raisin.android.skiing;
 
+import raisin.android.skiing.R;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -7,7 +8,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.os.Bundle;
 
-public class act1 extends Activity {
+public class GameActivity extends Activity {
 
 	final int MENU_NEW_GAME = 1;
 	final int MENU_QUIT = 2;
@@ -16,7 +17,7 @@ public class act1 extends Activity {
     // private GameThread mGameThread;
 
     /** A handle to the View in which the game is running. */
-    private act1View mGameView;
+    private GameView mGameView;
 
     // private Game game;
 
@@ -30,7 +31,7 @@ public class act1 extends Activity {
         setContentView(R.layout.main);
         
         // get handles to the LunarView from XML, and its LunarThread
-        mGameView = (act1View) findViewById(R.id.surface);
+        mGameView = (GameView) findViewById(R.id.surface);
         // mGameThread = mGameView.getThread();
     }
 

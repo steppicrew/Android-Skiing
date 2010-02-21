@@ -1,4 +1,4 @@
-package raisin.android1;
+package raisin.android.skiing;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
