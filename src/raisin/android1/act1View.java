@@ -12,11 +12,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.TextView;
 
-public class act1View extends SurfaceView implements SurfaceHolder.Callback {
+public class act1View extends SurfaceView implements SurfaceHolder.Callback, OnKeyListener {
 
 	private final class GameThread extends Thread {
 
@@ -32,10 +35,14 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback {
 			mContext= context;
         }
 
-        public void setRunning(boolean running) {
+		public boolean isRunning() {
+			return mRun;
+		}
+		
+		public void setRunning(boolean running) {
             mRun = running;
         }
-
+        
         @Override
         public void run() {
         	Log.w("GameThread", "run start");
@@ -92,6 +99,12 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback {
         	Log.w("GameThread", "unpause end");
 */
         }
+
+		public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
+            synchronized (mSurfaceHolder) {
+            	return GameBase.instance(mContext).handleKeyEvent(v, keyCode, event);
+            }
+		}
 	}
 
     /** The thread that actually draws the animation */
@@ -140,8 +153,10 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback {
                 mStatusText.setText(m.getData().getString("text"));
             }
         });
-
-    	GameBase.thaw(mContext);
+        
+        setOnKeyListener(this);
+        
+        GameBase.thaw(mContext);
         
 		thread.setRunning(true);
     	Log.w("GameThread", "thread.start start");
@@ -166,6 +181,14 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback {
     	GameBase.freeze();
 
     	thread= null;
+	}
+
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (thread.isRunning()) {
+			return thread.handleKeyEvent(v, keyCode, event);
+		}
+		return false;
 	}
 	
 	// public GameThread getThread() {
