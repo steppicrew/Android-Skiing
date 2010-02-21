@@ -21,6 +21,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 
 @SuppressWarnings("serial")
 public final class Game extends GameBase implements SensorEventListener, Serializable {
@@ -356,7 +358,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         	mLastTime= now;
 
         	// Wenn mLastTime 0 ist, enthalten folgende Zeitvariablen
-        	// relative Werte und müssen angepasst werden
+        	// relative Werte und mï¿½ssen angepasst werden
             playerLastMoveTime += mLastTime;
             crashUntilTime += mLastTime;
         }
@@ -513,6 +515,26 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	}
     		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
     }
+
+	public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
+		switch (event.getAction()) {
+		case KeyEvent.ACTION_DOWN:
+			switch (event.getKeyCode()) {
+			case KeyEvent.KEYCODE_DPAD_DOWN:  playerMoveY=  1000 * (event.getRepeatCount() + 1); return true;
+			case KeyEvent.KEYCODE_DPAD_UP:    playerMoveY= -1000 * (event.getRepeatCount() + 1); return true;
+			case KeyEvent.KEYCODE_DPAD_LEFT:  playerMoveX= -2 * (event.getRepeatCount() + 1); return true;
+			case KeyEvent.KEYCODE_DPAD_RIGHT: playerMoveX=  2 * (event.getRepeatCount() + 1); return true;
+			}
+		case KeyEvent.ACTION_UP:
+			switch (event.getKeyCode()) {
+			case KeyEvent.KEYCODE_DPAD_DOWN:
+			case KeyEvent.KEYCODE_DPAD_UP:    playerMoveY= 0; return true;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+			case KeyEvent.KEYCODE_DPAD_RIGHT: playerMoveX= 0; return true;
+			}
+		}
+		return false;
+	}
 
     // public void unpause() {
         // mLastTime = System.currentTimeMillis() + 100;

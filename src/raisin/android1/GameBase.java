@@ -5,14 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.OutputStream;
 import java.io.Serializable;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
+import android.view.KeyEvent;
+import android.view.View;
 
 @SuppressWarnings("serial")
 public class GameBase implements Serializable {
@@ -79,5 +77,10 @@ public class GameBase implements Serializable {
     public void setSurfaceSize( int width, int height ) {
     	// Empty
     }
+
+	public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }
