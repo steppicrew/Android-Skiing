@@ -1,11 +1,5 @@
 package raisin.android1;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Handler;
