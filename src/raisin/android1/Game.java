@@ -537,6 +537,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 						return true;
 					case KeyEvent.KEYCODE_ENTER:
 						if (lifes == 0) restart();
+						return true;
 				}
 			case KeyEvent.ACTION_UP:
 				switch (event.getKeyCode()) {
