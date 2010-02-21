@@ -32,12 +32,9 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	private static final int MAX_TREES= 8;
 	private static final int TREE_TYPES= 4;
 
-    public static final int STATE_INRO = 0;
-    public static final int STATE_LOSE = 1;
-    public static final int STATE_PAUSE = 2;
-    public static final int STATE_READY = 3;
-    public static final int STATE_RUNNING = 4;
-    public static final int STATE_WIN = 5;
+	public static enum GameState {
+		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
+	};
 	
 	private static class StageData {
 		public double top;
@@ -70,6 +67,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 			return (int)(y - another.y);
 		}
 
+		public abstract void update( GameState state );
 		public abstract void draw( Canvas canvas );
 
 		void drawDrawable( Canvas canvas, Drawable drawable, int ofsx, int ofsy ) {
@@ -112,6 +110,10 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         	type= random.nextInt(TREE_TYPES);
         	x= random.nextInt(mStageData.mCanvasWidth + width) + hotx;
         	y= mStageData.top + mStageData.mCanvasHeight + hoty;
+		}
+
+		@Override
+		public void update( GameState state ) {
 		}
 
 		@Override
@@ -187,13 +189,18 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 		}
 
 		@Override
+		public void update( GameState state ) {
+			if ( state == GameState.RUNNING ) {
+				playerOfsIndex= playerOfsIndex + 1 >= playerOfs.length ? 0 : playerOfsIndex + 1;
+			}
+		}
+
+		@Override
 		public void draw( Canvas canvas ) {
 	        if ( crash ) {
 	        	drawDrawable(canvas, mCrashImage, 0, 0);
 	        	return;
 	        }
-
-			playerOfsIndex= playerOfsIndex + 1 >= playerOfs.length ? 0 : playerOfsIndex + 1;
 	        drawDrawable(canvas, mShadowImage, 0, -playerOfs[playerOfsIndex]);
         	drawDrawable(canvas, mDriveImage, 0, -2 * playerOfs[playerOfsIndex]);
 		}
@@ -202,7 +209,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	private final static int speed= 300;
 
 	// Serializable
-	private int gameState;
+	private GameState gameState;
 	
 	private int lifes;
 	private double score;
@@ -269,11 +276,11 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         accel= 0;
         fspeed= 0;
     	rebuildSpriteList= true;
-    	gameState= STATE_RUNNING;
+    	gameState= GameState.RUNNING;
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-    	out.writeInt(gameState);
+    	out.writeInt(gameState.ordinal());
     	out.writeInt(lifes);
     	out.writeDouble(mStageData.top);
     	out.writeDouble(score);
@@ -293,7 +300,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         mTrees= new ArrayList<Tree>();
 
         restart();
-    	gameState= in.readInt();
+    	gameState= GameState.values()[in.readInt()];
     	lifes= in.readInt();
     	mStageData.top= in.readDouble();
     	score= in.readDouble();
@@ -355,9 +362,34 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         sprites.add(player);
     	rebuildSpriteList= false;
     }
+
+    // Check Integrity
+    private void setState( GameState state ) {
+    	switch ( state ) {
+	    	case PAUSE:
+	    		if ( gameState == GameState.RUNNING ) {
+	                playerLastMoveTime -= mLastTime;
+	                crashUntilTime -= mLastTime;
+	    	        mLastTime= 0;
+	    			gameState= state;
+	    			break;
+	    		}
+	    		break;
+
+	    	case RUNNING:
+	    		if ( gameState == GameState.PAUSE ) {
+	    			gameState= state;
+	    			break;
+	    		}
+	    		break;
+    	}
+    	Log.w("setState", "state: " + state + " gameState:" + gameState);
+    }
     
     private void update() {
         long now = System.currentTimeMillis();
+
+        if ( gameState != GameState.RUNNING ) return;
         
         if ( mLastTime > now ) return;
 
@@ -522,6 +554,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
     }
 
+    private boolean spacePressed;
+    
 	public boolean handleKeyEvent( View v, int keyCode, KeyEvent event ) {
 		switch ( event.getAction() ) {
 			case KeyEvent.ACTION_DOWN:
@@ -530,17 +564,29 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 					case KeyEvent.KEYCODE_DPAD_DOWN: 
 						playerMoveY=  1000 * factor;
 						return true;
+						
 					case KeyEvent.KEYCODE_DPAD_UP:    
 						playerMoveY= -1000 * factor; 
 						return true;
+						
 					case KeyEvent.KEYCODE_DPAD_LEFT:  
 						playerMoveX= -2 * factor;
 						return true;
+						
 					case KeyEvent.KEYCODE_DPAD_RIGHT: 
 						playerMoveX=  2 * factor;
 						return true;
+						
 					case KeyEvent.KEYCODE_ENTER:
 						if (lifes == 0) restart();
+						return true;
+						
+					case KeyEvent.KEYCODE_SPACE:
+						if ( !spacePressed ) {
+							if ( gameState == GameState.RUNNING ) setState(GameState.PAUSE);
+							else if ( gameState == GameState.PAUSE ) setState(GameState.RUNNING);
+						}
+						spacePressed= true;
 						return true;
 				}
 			case KeyEvent.ACTION_UP:
@@ -549,9 +595,14 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 					case KeyEvent.KEYCODE_DPAD_UP:   
 						playerMoveY= 0;
 						return true;
+						
 					case KeyEvent.KEYCODE_DPAD_LEFT:
 					case KeyEvent.KEYCODE_DPAD_RIGHT:
 						playerMoveX= 0;
+						return true;
+
+					case KeyEvent.KEYCODE_SPACE:
+						spacePressed= false;
 						return true;
 				}
 		}
@@ -562,7 +613,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     public void pause() {
 		super.pause();
         // mLastTime = System.currentTimeMillis() + 100;
-        gameState= STATE_PAUSE;
+        setState(GameState.PAUSE);
     	// setState(STATE_RUNNING);
     }
 
@@ -570,7 +621,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     public void unpause() {
 		super.unpause();
         // mLastTime = System.currentTimeMillis() + 100;
-        gameState= STATE_RUNNING;
+        setState(GameState.RUNNING);
     	// setState(STATE_RUNNING);
     }
 }
