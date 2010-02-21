@@ -176,6 +176,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, OnK
 
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		Log.e("Key", "Thread running: " + thread.isRunning());
 		if ( thread.isRunning() ) {
 			return thread.handleKeyEvent(v, keyCode, event);
 		}
@@ -187,6 +188,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, OnK
 	}
 	
 	public void resume() {
+		if ( thread == null ) Log.e("resume", "Thread is NULL!");
 		if ( thread != null ) thread.unpause();
 	}
 	

@@ -245,6 +245,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 
 	private transient Paint mScoreTextPaint;
 	private transient Paint mHitsTextPaint;
+	private transient Paint mStatusTextPaint;
 
     Game() {
     	restart();
@@ -352,12 +353,16 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	        mHitsTextPaint= new Paint();
 	        mHitsTextPaint.setTextAlign(Align.RIGHT);
 	        mHitsTextPaint.setTextSize(50f);
+
+	        mStatusTextPaint= new Paint();
+	        mStatusTextPaint.setTextAlign(Align.CENTER);
+	        mStatusTextPaint.setTextSize(50f);
     	}
     }
     
     private void buildSpriteList() {
 
-    	Log.e("Game", "rebuildspritelist");
+    	Log.w("Game", "rebuildspritelist");
 
     	sprites.clear();
     	sprites.addAll(mTrees);
@@ -391,6 +396,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     private void update() {
         long now = System.currentTimeMillis();
 
+        // Log.e("gameState", "" + gameState);
+        
         if ( gameState != GameState.RUNNING ) return;
         
         if ( mLastTime > now ) return;
@@ -520,6 +527,11 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 
     	canvas.drawText("" + (int)(score), 40, 60, mScoreTextPaint);
     	canvas.drawText("" + lifes + " to go", mStageData.mCanvasWidth - 40, 60, mHitsTextPaint);
+
+    	if ( gameState == GameState.PAUSE ) {
+    		canvas.drawText("PAUSED", mStageData.mCanvasWidth / 2, mStageData.mCanvasHeight / 2, mStatusTextPaint);
+    	}
+    
     }
 
     @Override
@@ -556,11 +568,16 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
     }
 
-    private boolean spacePressed;
+    private boolean pauseKeyPressed;
     
+    @Override
 	public boolean handleKeyEvent( View v, int keyCode, KeyEvent event ) {
-		if (super.handleKeyEvent(v, keyCode, event)) return true;
-		switch ( event.getAction() ) {
+
+    	Log.e("Key", "" + keyCode + " event: " + event);
+    	
+    	if ( super.handleKeyEvent(v, keyCode, event) ) return true;
+		
+    	switch ( event.getAction() ) {
 			case KeyEvent.ACTION_DOWN:
 				int factor= event.getRepeatCount() + 1;
 				switch ( event.getKeyCode() ) {
@@ -584,12 +601,13 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 						if (lifes == 0) restart();
 						return true;
 						
+					case KeyEvent.KEYCODE_P:
 					case KeyEvent.KEYCODE_SPACE:
-						if ( !spacePressed ) {
+						if ( !pauseKeyPressed ) {
 							if ( gameState == GameState.RUNNING ) setState(GameState.PAUSE);
 							else if ( gameState == GameState.PAUSE ) setState(GameState.RUNNING);
 						}
-						spacePressed= true;
+						pauseKeyPressed= true;
 						return true;
 				}
 			case KeyEvent.ACTION_UP:
@@ -604,8 +622,9 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 						playerMoveX= 0;
 						return true;
 
+					case KeyEvent.KEYCODE_P:
 					case KeyEvent.KEYCODE_SPACE:
-						spacePressed= false;
+						pauseKeyPressed= false;
 						return true;
 				}
 		}
@@ -615,16 +634,12 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	@Override
     public void pause() {
 		super.pause();
-        // mLastTime = System.currentTimeMillis() + 100;
         setState(GameState.PAUSE);
-    	// setState(STATE_RUNNING);
     }
 
 	@Override
     public void unpause() {
 		super.unpause();
-        // mLastTime = System.currentTimeMillis() + 100;
         setState(GameState.RUNNING);
-    	// setState(STATE_RUNNING);
     }
 }
