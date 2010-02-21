@@ -83,4 +83,14 @@ public class GameBase implements Serializable {
 		return false;
 	}
 
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void unpause() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -80,24 +80,20 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback, OnK
         }
         
         public void pause() {
-/*
          	Log.w("GameThread", "pause start");
  
             synchronized (mSurfaceHolder) {
-            	game.pause();
+            	GameBase.instance(mContext).pause();
             }
         	Log.w("GameThread", "pause end");
-*/
         }
 
         public void unpause() {
-/*
         	Log.w("GameThread", "unpause start");
             synchronized (mSurfaceHolder) {
-            	game.unpause();
+            	GameBase.instance(mContext).unpause();
             }
         	Log.w("GameThread", "unpause end");
-*/
         }
 
 		public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
@@ -169,11 +165,12 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback, OnK
         boolean retry = true;
         thread.setRunning(false);
     	Log.w("GameThread", "thread.join start");
-        while (retry) {
+        while ( retry ) {
             try {
                 thread.join();
                 retry = false;
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
             }
         }
     	Log.w("GameThread", "thread.join end");
@@ -185,10 +182,18 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback, OnK
 
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (thread.isRunning()) {
+		if ( thread.isRunning() ) {
 			return thread.handleKeyEvent(v, keyCode, event);
 		}
 		return false;
+	}
+	
+	public void pause() {
+		if ( thread != null ) thread.pause();
+	}
+	
+	public void resume() {
+		if ( thread != null ) thread.unpause();
 	}
 	
 	// public GameThread getThread() {

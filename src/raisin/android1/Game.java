@@ -41,8 +41,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	
 	private static class StageData {
 		public double top;
-	    public int mCanvasHeight = 1;
-	    public int mCanvasWidth = 1;
+	    public transient int mCanvasHeight = 1;
+	    public transient int mCanvasWidth = 1;
 		public transient Drawable[] mTreeImages;
 	}
 
@@ -202,6 +202,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	private final static int speed= 300;
 
 	// Serializable
+	private int gameState;
+	
 	private int lifes;
 	private double score;
 	
@@ -267,9 +269,11 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         accel= 0;
         fspeed= 0;
     	rebuildSpriteList= true;
+    	gameState= STATE_RUNNING;
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    	out.writeInt(gameState);
     	out.writeInt(lifes);
     	out.writeDouble(mStageData.top);
     	out.writeDouble(score);
@@ -289,6 +293,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
         mTrees= new ArrayList<Tree>();
 
         restart();
+    	gameState= in.readInt();
     	lifes= in.readInt();
     	mStageData.top= in.readDouble();
     	score= in.readDouble();
@@ -503,7 +508,6 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 		// if ( event.values.length > 2 ) Log.w("Sensor 2", "" + event.values[2]);
 
 		if ( event.values.length > 2 ) {
-			// playerLastMoveTime= mLastTime;	// UNUSED
 			playerMoveX= mStageData.mCanvasHeight > mStageData.mCanvasWidth ? -event.values[2] : -event.values[1];
 			playerMoveY= mStageData.mCanvasHeight > mStageData.mCanvasWidth ? -event.values[1] : event.values[2];
 		}
@@ -519,10 +523,10 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     }
 
 	public boolean handleKeyEvent( View v, int keyCode, KeyEvent event ) {
-		switch (event.getAction()) {
+		switch ( event.getAction() ) {
 			case KeyEvent.ACTION_DOWN:
 				int factor= event.getRepeatCount() + 1;
-				switch (event.getKeyCode()) {
+				switch ( event.getKeyCode() ) {
 					case KeyEvent.KEYCODE_DPAD_DOWN: 
 						playerMoveY=  1000 * factor;
 						return true;
@@ -551,8 +555,19 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 		return false;
 	}
 
-    // public void unpause() {
+	@Override
+    public void pause() {
+		super.pause();
         // mLastTime = System.currentTimeMillis() + 100;
+        gameState= STATE_PAUSE;
     	// setState(STATE_RUNNING);
-    // }
+    }
+
+	@Override
+    public void unpause() {
+		super.unpause();
+        // mLastTime = System.currentTimeMillis() + 100;
+        gameState= STATE_RUNNING;
+    	// setState(STATE_RUNNING);
+    }
 }

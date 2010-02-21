@@ -50,10 +50,16 @@ public class act1 extends Activity {
     	Log.w("Act1", "onPause");
         
     	super.onPause();
-        // mGameView.getThread().pause(); // pause game when Activity pauses
+        mGameView.pause();
     }
 
-    /* Handles item selections */
+    @Override
+	protected void onResume() {
+		super.onResume();
+        mGameView.resume();
+	}
+
+	/* Handles item selections */
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
