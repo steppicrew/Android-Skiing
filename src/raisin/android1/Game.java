@@ -523,6 +523,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     }
 
 	public boolean handleKeyEvent( View v, int keyCode, KeyEvent event ) {
+		if (super.handleKeyEvent(v, keyCode, event)) return true;
 		switch ( event.getAction() ) {
 			case KeyEvent.ACTION_DOWN:
 				int factor= event.getRepeatCount() + 1;
@@ -541,6 +542,10 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 						return true;
 					case KeyEvent.KEYCODE_ENTER:
 						if (lifes == 0) restart();
+						return true;
+					case KeyEvent.KEYCODE_SPACE:
+						if (gameState == STATE_PAUSE) unpause();
+						else pause();
 						return true;
 				}
 			case KeyEvent.ACTION_UP:
