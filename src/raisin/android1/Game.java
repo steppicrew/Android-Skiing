@@ -200,34 +200,36 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	}
 
 	private final static int speed= 300;
-	// private int speed= 100;
 
+	// Serializable
 	private int lifes;
 	private double score;
 	
-    private long mLastTime;
-    
     private long mNextTreeTime;
     private long playerLastMoveTime;
     private long crashUntilTime;
 
     private float accel;
     private float fspeed;
-	private boolean rebuildSpriteList;
 
     StageData mStageData= new StageData();
 	private Player player= new Player(mStageData);
 
-	private float playerMoveX;
-	private float playerMoveY;
+    private List<Tree> mTrees= new ArrayList<Tree>();
 
-    private transient List<Sprite> sprites= new ArrayList<Sprite>();
+	// Unserializable
+    private transient long mLastTime;
+    
+	private transient float playerMoveX;
+	private transient float playerMoveY;
+
+	private transient boolean rebuildSpriteList;
+
+	private transient List<Sprite> sprites= new ArrayList<Sprite>();
 
     private transient SensorManager mSensorManager;
 	private transient Sensor mSensor;
 	
-    private List<Tree> mTrees= new ArrayList<Tree>();
-
     private transient Bitmap mBackgroundImage;
 
 	private transient Paint mScoreTextPaint;
