@@ -20,6 +20,7 @@ public class GameBase implements Serializable {
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
 	private static Game instance;
+	protected static Context mContext;
 
 	static public GameBase instance( Context context ) {
 		if ( instance == null ) {
@@ -60,14 +61,14 @@ public class GameBase implements Serializable {
     }
 	
     public void init( Context context ) {
-    	// Empty
+    	mContext= context;
     }
     
     public void restart() {
     	// Empty
     }
     
-    public void refresh( Context context, Canvas canvas ) {
+    public void refresh( Canvas canvas ) {
     	// Empty
     }
 

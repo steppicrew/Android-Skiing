@@ -44,7 +44,7 @@ public class act1View extends SurfaceView implements SurfaceHolder.Callback {
                 try {
                     canvas = mSurfaceHolder.lockCanvas(null);
                     synchronized (mSurfaceHolder) {
-                    	GameBase.instance(mContext).refresh(mContext, canvas);
+                    	GameBase.instance(mContext).refresh(canvas);
                     }
                 } finally {
                     // do this in a finally so that if an exception is thrown

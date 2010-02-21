@@ -30,6 +30,13 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	private static final int MAX_TREES= 8;
 	private static final int TREE_TYPES= 4;
 
+    public static final int STATE_INRO = 0;
+    public static final int STATE_LOSE = 1;
+    public static final int STATE_PAUSE = 2;
+    public static final int STATE_READY = 3;
+    public static final int STATE_RUNNING = 4;
+    public static final int STATE_WIN = 5;
+	
 	private static class StageData {
 		public double top;
 	    public int mCanvasHeight = 1;
@@ -99,18 +106,6 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 			hoty= 120;
 		}
 		
-/*
-		private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-			super.writeObject(out);
-			out.writeInt(type);
-	    }
-		
-	    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-			super.readObject(in);
-	    	type= in.readInt();
-	    }
-*/
-
 		void randomize() {
         	type= random.nextInt(TREE_TYPES);
         	x= random.nextInt(mStageData.mCanvasWidth + width) + hotx;
@@ -161,17 +156,6 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 			super.init(stageData);
 		}
 
-/*
-		private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-			super.writeObject(out);
-			out.writeBoolean(crash);
-	    }
-
-	    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-			super.readObject(in);
-	    	crash= in.readBoolean();
-	    }
-*/		
 		void fixContext( Context context ) {
 
 			if ( mDriveImage != null ) return;
@@ -251,7 +235,9 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	restart();
     }
 
+    @Override
     public void init( Context context ) {
+    	super.init(context);
     	mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     	List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
     	if ( sensors.size() > 0 ) {
@@ -263,7 +249,9 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	}
     }
     
+    @Override
     public void restart() {
+    	super.restart();
     	player= new Player(mStageData);
     	lifes= 5;
     	mStageData.top= 0;
@@ -315,37 +303,35 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	}
     }
 
+    @Override
     public void setSurfaceSize( int width, int height ) {
+    	super.setSurfaceSize(width, height);
     	mStageData.mCanvasWidth = width;
     	mStageData.mCanvasHeight = height;
     }
     
-    private void fixContent( Context context ) {
+    private void fixContent() {
 
     	if ( mBackgroundImage == null ) {
-            Resources res = context.getResources();
+            Resources res = mContext.getResources();
             mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.snow);
-            // mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage,
-            // 		mCanvasWidth, mCanvasHeight, true);
     	}
 
-    	player.fixContext(context);
+    	player.fixContext(mContext);
 
     	if ( mStageData.mTreeImages == null ) {
     	
     		mStageData.mTreeImages= new Drawable[TREE_TYPES];
 	    	String prefix= Game.class.getPackage().getName() + ":drawable/tree";
 	        for ( int i= 0; i < TREE_TYPES; i++ ) {
-		        int id= context.getResources().getIdentifier(prefix + (i + 1), null, null);
-		        mStageData.mTreeImages[i]= context.getResources().getDrawable(id);
+		        int id= mContext.getResources().getIdentifier(prefix + (i + 1), null, null);
+		        mStageData.mTreeImages[i]= mContext.getResources().getDrawable(id);
 	        }
 	
 	        mScoreTextPaint= new Paint();
-	        // mStatusTextPaint.setColor(Color.BLACK);
 	        mScoreTextPaint.setTextSize(50f);
 	
 	        mHitsTextPaint= new Paint();
-	        // mStatusTextPaint.setColor(Color.BLACK);
 	        mHitsTextPaint.setTextAlign(Align.RIGHT);
 	        mHitsTextPaint.setTextSize(50f);
     	}
@@ -492,9 +478,10 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	canvas.drawText("" + (int)(score), 40, 60, mScoreTextPaint);
     	canvas.drawText("" + lifes + " to go", mStageData.mCanvasWidth - 40, 60, mHitsTextPaint);
     }
-    
-    public void refresh( Context context, Canvas canvas ) {
-        fixContent(context);
+
+    @Override
+    public void refresh( Canvas canvas ) {
+        fixContent();
     	update();
     	draw(canvas);
     }
@@ -518,7 +505,9 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 		}
 	}
     
+    @Override
     public void destroy() {
+    	super.destroy();
     	if ( mSensorManager != null ) {
     		mSensorManager.unregisterListener(this, mSensor);
     	}
