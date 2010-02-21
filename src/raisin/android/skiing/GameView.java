@@ -7,13 +7,18 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback, OnKeyListener {
+public class GameView extends SurfaceView
+	implements SurfaceHolder.Callback, OnKeyListener, OnTouchListener
+{
 
 	private final class GameThread extends Thread {
 
@@ -145,6 +150,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, OnK
         });
         
         setOnKeyListener(this);
+        setOnTouchListener(this);
         
         GameBase.thaw(mContext);
         
@@ -191,8 +197,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback, OnK
 		if ( thread == null ) Log.e("resume", "Thread is NULL!");
 		if ( thread != null ) thread.unpause();
 	}
-	
-	// public GameThread getThread() {
-    //     return thread;
-	//}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		if ( thread == null ) Log.e("onTouch", "Thread is NULL!");
+		if ( thread != null ) {
+			thread.unpause();
+			return true;
+		}
+		return false;
+	}
 }
