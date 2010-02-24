@@ -4,7 +4,6 @@
 package raisin.android.example.parallax;
 
 import raisin.android.engine.GameRuntime;
-import raisin.android.engine.GameRuntime.StageData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;

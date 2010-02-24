@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import raisin.android.engine.GameRuntime;
-import raisin.android.engine.GameRuntime.GameState;
-import raisin.android.engine.GameRuntime.StageData;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
