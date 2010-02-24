@@ -5,7 +5,6 @@ package raisin.android.example.parallax;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.R;
-import raisin.android.engine.GameRuntime.StageData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -56,12 +55,12 @@ class Player extends Sprite {
 	public void addX(double diffx) {
 		fixWH();
 		
-		if ( x < 0 ) x= mStageData.mCanvasWidth / 2;
+		if ( x < 0 ) x= GameRuntime.mCanvasWidth / 2;
 
         x += diffx;
         if ( x < hotx ) x= hotx;
-        if ( x > mStageData.mCanvasWidth - width + hotx ) {
-        	x= mStageData.mCanvasWidth - width + hotx;
+        if ( x > GameRuntime.mCanvasWidth - width + hotx ) {
+        	x= GameRuntime.mCanvasWidth - width + hotx;
         }
 	}
 

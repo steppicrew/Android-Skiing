@@ -144,13 +144,6 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	}
     }
 
-    @Override
-    public void setSurfaceSize( int width, int height ) {
-    	super.setSurfaceSize(width, height);
-    	mStageData.mCanvasWidth = width;
-    	mStageData.mCanvasHeight = height;
-    }
-
     private void fixContent() {
 
     	if ( mBackgroundImage == null ) {
@@ -282,8 +275,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         int height= mBackgroundImage.getHeight();
 
         int ytop= -((int)mStageData.top % height);
-        for ( int y = ytop; y < mStageData.mCanvasHeight - ytop; y += height ) {
-    		for ( int x = 0; x < mStageData.mCanvasWidth; x += width ) {
+        for ( int y = ytop; y < GameRuntime.mCanvasHeight - ytop; y += height ) {
+    		for ( int x = 0; x < GameRuntime.mCanvasWidth; x += width ) {
             	canvas.drawBitmap(mBackgroundImage, x, y, null);
     		}
     	}
@@ -298,10 +291,10 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 	    }
 
     	canvas.drawText("" + (int)(score), 40, 60, mScoreTextPaint);
-    	canvas.drawText("" + lifes + " to go", mStageData.mCanvasWidth - 40, 60, mHitsTextPaint);
+    	canvas.drawText("" + lifes + " to go", GameRuntime.mCanvasWidth - 40, 60, mHitsTextPaint);
 
     	if ( gameState == GameRuntime.GameState.PAUSE ) {
-    		canvas.drawText("PAUSED", mStageData.mCanvasWidth / 2, mStageData.mCanvasHeight / 2, mStatusTextPaint);
+    		canvas.drawText("PAUSED", GameRuntime.mCanvasWidth / 2, GameRuntime.mCanvasHeight / 2, mStatusTextPaint);
     	}
     
     }
@@ -326,8 +319,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 		// if ( event.values.length > 2 ) Log.w("Sensor 2", "" + event.values[2]);
 
 		if ( event.values.length > 2 ) {
-			playerMoveX= mStageData.mCanvasHeight > mStageData.mCanvasWidth ? -event.values[2] : -event.values[1];
-			playerMoveY= mStageData.mCanvasHeight > mStageData.mCanvasWidth ? -event.values[1] : event.values[2];
+			playerMoveX= GameRuntime.mCanvasHeight > GameRuntime.mCanvasWidth ? -event.values[2] : -event.values[1];
+			playerMoveY= GameRuntime.mCanvasHeight > GameRuntime.mCanvasWidth ? -event.values[1] : event.values[2];
 		}
 	}
     

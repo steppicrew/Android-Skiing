@@ -44,8 +44,8 @@ class Tree extends Sprite {
 	
 	void randomize() {
     	type= GameRuntime.random.nextInt(TREE_TYPES);
-    	x= GameRuntime.random.nextInt(mStageData.mCanvasWidth + width) + hotx;
-    	y= mStageData.top + mStageData.mCanvasHeight + hoty;
+    	x= GameRuntime.random.nextInt(GameRuntime.mCanvasWidth + width) + hotx;
+    	y= mStageData.top + GameRuntime.mCanvasHeight + hoty;
 	}
 
 	@Override
