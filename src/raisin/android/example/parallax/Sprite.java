@@ -32,10 +32,10 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	
 	@Override
 	public int compareTo( Sprite another ) {
-		Point3d diffPoint= new Point3d();
-		diffPoint.sub(coord, another.coord);
-		// 
-		diffPoint.add(new Point3d(0d, 0d, dimension.z));
+		Point3d diffPoint= new Point3d(coord)
+			.sub(another.coord)
+		;
+
 		int zDiff= (int)diffPoint.z;
 		if ( zDiff == 0 ) return (int)diffPoint.y;
 		return zDiff;
@@ -45,27 +45,20 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	public abstract void draw( Canvas canvas );
 
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
-		Point3d pointHot= new Point3d(coord);
-		pointHot.add(ofs);
-		pointHot.sub(hotspot);
-		pointHot.sub(new Point3d(0, mStageData.top, 0));
-		
-		Point3d scaledHalfDimension= new Point3d(dimension);
-		// TODO: make factor (i.e. viewers point) changable
-//		scaledHalfDimension.scaleSelf(ofs.z - pointHot.z);
+		Point3d upperLeftBack= new Point3d(coord)
+			.sub(hotspot)
+			.sub(ofs)
+			.sub(mStageData.origin)
+		;
+		Point3d lowerRightFront= new Point3d(upperLeftBack)
+			.add(dimension)
+		;
 
-		scaledHalfDimension.scaleSelf(0.5d);
-		
-		Point3d pointUpperLeftBack= new Point3d();
-		pointUpperLeftBack.sub(pointHot, scaledHalfDimension);
-		
-		Point3d pointLowerRightFront= new Point3d(pointHot);
-		pointLowerRightFront.add(scaledHalfDimension);
-		
+
 		// TODO: calculate bounds from all three coordinates
 		drawable.setBounds(
-				pointUpperLeftBack.intX(), pointUpperLeftBack.intY(),
-				pointLowerRightFront.intX(), pointLowerRightFront.intY()
+				upperLeftBack.intX(), upperLeftBack.intY(),
+				lowerRightFront.intX(), lowerRightFront.intY()
 		);
 		drawable.draw(canvas);
 	}
