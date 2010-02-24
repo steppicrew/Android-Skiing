@@ -14,7 +14,7 @@ import android.graphics.drawable.Drawable;
 abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 	// Unserializable
-	protected transient GameRuntime.StageData mStageData;
+	protected transient GameRuntime.Stage mStageData;
 	
 	protected transient Point3d dimension;
 	protected transient Point3d hotspot;
@@ -22,11 +22,11 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	// Serializable
 	protected Point3d coord;
 
-	Sprite( GameRuntime.StageData stageData ) {
+	Sprite( GameRuntime.Stage stageData ) {
 		init(stageData);
 	}
 
-	public void init( GameRuntime.StageData stageData ) {
+	public void init( GameRuntime.Stage stageData ) {
 		this.mStageData= stageData;
 	}
 	
@@ -53,7 +53,6 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		Point3d lowerRightFront= new Point3d(upperLeftBack)
 			.add(dimension)
 		;
-
 
 		// TODO: calculate bounds from all three coordinates
 		drawable.setBounds(

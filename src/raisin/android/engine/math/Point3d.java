@@ -142,7 +142,7 @@ public final class Point3d {
     	return (float)Math.sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ );
     }
     
-    public float lenth() {
+    public float length() {
     	return (float)Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z)); 
     }
      

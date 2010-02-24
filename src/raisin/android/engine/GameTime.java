@@ -49,6 +49,7 @@ public class GameTime {
         return elapsed;
 	}
 
+	@SuppressWarnings("unused")
 	private transient boolean isMaster;
 	private transient long mLastTime;
 
