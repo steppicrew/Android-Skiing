@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Random;
+
+import raisin.android.skiing.ParallaxGame.GameState;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -17,12 +20,14 @@ public class GameBase implements Serializable {
 
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
-	private static Game instance;
+	private static GameBase instance;
 	protected static Context mContext;
+
+	protected static Random random= new Random();
 
 	static public GameBase instance( Context context ) {
 		if ( instance == null ) {
-			instance= new Game();
+			instance= new ParallaxGame();
 			instance.init(context);
 		}
 		return instance;
@@ -66,10 +71,6 @@ public class GameBase implements Serializable {
     	// Empty
     }
     
-    public void refresh( Canvas canvas ) {
-    	// Empty
-    }
-
     public void destroy() {
     	// Empty
     }
@@ -89,6 +90,11 @@ public class GameBase implements Serializable {
 	}
 
 	public void unpause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void refresh(Canvas canvas) {
 		// TODO Auto-generated method stub
 		
 	}

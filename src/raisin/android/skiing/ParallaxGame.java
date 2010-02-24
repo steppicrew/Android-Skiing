@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import raisin.android.skiing.R;
 
@@ -27,9 +26,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public final class Game extends GameBase implements SensorEventListener, Serializable {
-
-	private static Random random= new Random();
+public final class ParallaxGame extends GameBase implements SensorEventListener, Serializable {
 
 	private static final int MAX_TREES= 8;
 	private static final int TREE_TYPES= 4;
@@ -54,7 +51,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 		protected transient int hotx, hoty;
 
 		// Serializable
-		protected double x, y;
+		protected double x, y, z;
 
 		Sprite( StageData stageData ) {
 			init(stageData);
@@ -126,24 +123,6 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 
 	private static class Player extends Sprite {
 
-		// Unserializable
-		private transient static final int[] playerOfs= {
-			0, 0, 0, 0,
-			1,
-			0, 0, 0,
-			1, 2, 1,
-			0, 0, 0, 0, 0,
-			1, 2, 3, 3, 2, 1,
-			0, 0, 0, 0, 0, 0,
-			1, 2, 3, 3, 4, 4, 4, 3, 3, 2, 1,
-			0, 0, 0, 0, 0,
-			1,
-			0, 0,
-			1
-		};
-			
-		private transient int playerOfsIndex;
-
 		private transient Drawable mDriveImage;
 		private transient Drawable mShadowImage;
 		private transient Drawable mCrashImage;
@@ -192,9 +171,6 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 
 		@Override
 		public void update( GameState state ) {
-			if ( state == GameState.RUNNING ) {
-				playerOfsIndex= playerOfsIndex + 1 >= playerOfs.length ? 0 : playerOfsIndex + 1;
-			}
 		}
 
 		@Override
@@ -203,8 +179,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	        	drawDrawable(canvas, mCrashImage, 0, 0);
 	        	return;
 	        }
-	        drawDrawable(canvas, mShadowImage, 0, -playerOfs[playerOfsIndex]);
-        	drawDrawable(canvas, mDriveImage, 0, -2 * playerOfs[playerOfsIndex]);
+	        drawDrawable(canvas, mShadowImage, 0, 0);
+        	drawDrawable(canvas, mDriveImage, 0, 0);
 		}
 	}
 
@@ -215,10 +191,14 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	
 	private int lifes;
 	private double score;
+
+    private transient GameTime GTmPlayerLastMoveTime;
+    private GameTime GTmNextTreeTime;
+    private GameTime GTmCrashUntilTime;
 	
-    private long mNextTreeTime;
-    private long playerLastMoveTime;
-    private long crashUntilTime;
+    // private long mNextTreeTime;
+    // private long playerLastMoveTime;
+    // private long crashUntilTime;
 
     private float accel;
     private float fspeed;
@@ -229,7 +209,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     private List<Tree> mTrees= new ArrayList<Tree>();
 
 	// Unserializable
-    private transient long mLastTime;
+    // private transient long mLastTime;
     
 	private transient float playerMoveX;
 	private transient float playerMoveY;
@@ -247,7 +227,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	private transient Paint mHitsTextPaint;
 	private transient Paint mStatusTextPaint;
 
-    Game() {
+    ParallaxGame() {
     	restart();
     }
 
@@ -268,14 +248,22 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     @Override
     public void restart() {
     	super.restart();
+
+    	mStageData= new StageData();
+        sprites= new ArrayList<Sprite>();
+        mTrees= new ArrayList<Tree>();
+
     	player= new Player(mStageData);
-    	lifes= 5;
+    	
+    	GameTime.reset();
+        GTmPlayerLastMoveTime= GameTime.newInstance();
+        GTmNextTreeTime= GameTime.newInstance();
+        GTmCrashUntilTime= GameTime.newInstance();
+
+        lifes= 5;
     	mStageData.top= 0;
     	score= 0;
-    	mLastTime= 0;
-        mNextTreeTime= 0;
-        playerLastMoveTime= 0;
-        crashUntilTime= 0;
+
         accel= 0;
         fspeed= 0;
     	rebuildSpriteList= true;
@@ -287,8 +275,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	out.writeInt(lifes);
     	out.writeDouble(mStageData.top);
     	out.writeDouble(score);
-    	out.writeLong(mNextTreeTime - mLastTime);
-    	out.writeLong(crashUntilTime - mLastTime);
+    	out.writeLong(GTmNextTreeTime.getOffset());
+    	out.writeLong(GTmCrashUntilTime.getOffset());
     	out.writeFloat(accel);
     	out.writeFloat(fspeed);
     	out.writeObject(player);
@@ -298,18 +286,13 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 
-    	mStageData= new StageData();
-        sprites= new ArrayList<Sprite>();
-        mTrees= new ArrayList<Tree>();
-
         restart();
     	gameState= GameState.values()[in.readInt()];
     	lifes= in.readInt();
     	mStageData.top= in.readDouble();
     	score= in.readDouble();
-    	mLastTime= 0;	// Auf 0 setzen, damit die Zeitwerte in update() korrigiert werden.
-    	mNextTreeTime= in.readLong();
-    	crashUntilTime= in.readLong();
+        GTmNextTreeTime.readFromStream(in);
+        GTmCrashUntilTime.readFromStream(in);
     	accel= in.readFloat();
     	fspeed= in.readFloat();
     	player= (Player) in.readObject();
@@ -328,7 +311,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	mStageData.mCanvasWidth = width;
     	mStageData.mCanvasHeight = height;
     }
-    
+
     private void fixContent() {
 
     	if ( mBackgroundImage == null ) {
@@ -375,9 +358,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     	switch ( state ) {
 	    	case PAUSE:
 	    		if ( gameState == GameState.RUNNING ) {
-	                playerLastMoveTime -= mLastTime;
-	                crashUntilTime -= mLastTime;
-	    	        mLastTime= 0;
+	    	        GameTime.stop();
 	    			gameState= state;
 	    			break;
 	    		}
@@ -394,33 +375,13 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     }
     
     private void update() {
-        long now = System.currentTimeMillis();
 
         // Log.e("gameState", "" + gameState);
         
-        if ( gameState != GameState.RUNNING ) return;
-        
-        if ( mLastTime > now ) return;
+        double elapsed = GameTime.getElapsed();
 
-        if ( mLastTime == 0 ) {
-        	mLastTime= now;
-
-        	// Wenn mLastTime 0 ist, enthalten folgende Zeitvariablen
-        	// relative Werte und m�ssen angepasst werden
-            playerLastMoveTime += mLastTime;
-            crashUntilTime += mLastTime;
-        }
-        
-        double elapsed = (now - mLastTime) / 1000.0;
-        mLastTime = now;
-
-        // FIXME zu grosses elapsed abfangen
-        // if ( elapsed > 10 ) return;
-
-        if ( playerLastMoveTime < now ) {
-
-        	playerLastMoveTime += 10;
-        	if ( playerLastMoveTime < now ) playerLastMoveTime= now;
+        if ( GTmPlayerLastMoveTime.runOut() ) {
+        	GTmPlayerLastMoveTime.setOffset(10);
         
         	if ( lifes == 0 ) {
         		accel -= 0.03f;
@@ -450,10 +411,8 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 	        
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
 
-        if ( mNextTreeTime < now ) {
-
-        	mNextTreeTime += 1000;
-        	if ( mNextTreeTime < now ) mNextTreeTime= now;
+        if ( GTmNextTreeTime.runOut() ) {
+        	GTmNextTreeTime.setOffset(1000);
 
             Iterator<Tree> it = mTrees.iterator();
             while ( it.hasNext() ){
@@ -476,7 +435,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     }
 
     private boolean crashing() {
-    	return mLastTime < crashUntilTime || lifes == 0;
+    	return !GTmCrashUntilTime.runOut() || lifes == 0;
     }
     
     private boolean crashed() {
@@ -497,7 +456,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
 
     		if ( py < treeTop || py > treeBottom ) continue;
 
-    		crashUntilTime= mLastTime + 1500;
+    		GTmCrashUntilTime.setOffset(1500);
     		if ( lifes > 0 ) lifes--;
     		return true;
     	}
@@ -537,7 +496,7 @@ public final class Game extends GameBase implements SensorEventListener, Seriali
     @Override
     public void refresh( Canvas canvas ) {
         fixContent();
-    	update();
+        if ( gameState == GameState.RUNNING ) update();
     	draw(canvas);
     }
 
