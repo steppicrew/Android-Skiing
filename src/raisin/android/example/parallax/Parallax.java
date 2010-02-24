@@ -128,7 +128,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         restart();
     	gameState= GameRuntime.GameState.values()[in.readInt()];
     	lifes= in.readInt();
-    	mStageData.top= in.readDouble();
+    	mStageData.top= in.readFloat();
     	score= in.readDouble();
         mNextTreeTime.readFromStream(in);
         mCrashUntilTime.readFromStream(in);
@@ -212,7 +212,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         }
 
         mStageData.top += elapsed * fspeed;
-        player.y += elapsed * fspeed;
+        player.coord.y += elapsed * fspeed;
 	        
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
 
@@ -222,7 +222,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
             Iterator<Tree> it = mTrees.iterator();
             while ( it.hasNext() ){
             	Tree tree= it.next();
-            	if ( tree.y < mStageData.top - tree.height ) {
+            	if ( tree.coord.y < mStageData.top - tree.dimension.y ) {
             		sprites.remove(tree);
             		it.remove();
             		// rebuildSpriteList= true;
@@ -247,17 +247,17 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	if ( crashing() ) return true;
 
     	for ( Tree tree: mTrees ) {
-    		int treeLeft= (int)tree.x - tree.width / 4;
-    		int treeRight= (int)tree.x + tree.width / 4;
+    		int treeLeft= (int)(tree.coord.x - tree.dimension.x / 4);
+    		int treeRight= (int)(tree.coord.x + tree.dimension.x / 4);
 
-    		int playerLeft= (int)player.x - player.width / 3;
-    		int playerRight= (int)player.x + player.width / 3;
+    		int playerLeft= (int)(player.coord.x - player.dimension.x / 3);
+    		int playerRight= (int)(player.coord.x + player.dimension.x / 3);
 
     		if ( playerRight < treeLeft || playerLeft > treeRight ) continue;
 
-    		int py= (int)player.y;
-    		int treeTop= (int)tree.y - 10;
-    		int treeBottom= (int)tree.y + 7;
+    		int py= (int)player.coord.y;
+    		int treeTop= (int)tree.coord.y - 10;
+    		int treeBottom= (int)tree.coord.y + 7;
 
     		if ( py < treeTop || py > treeBottom ) continue;
 

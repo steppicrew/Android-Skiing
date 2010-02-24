@@ -5,6 +5,7 @@ package raisin.android.example.parallax;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.R;
+import raisin.android.engine.math.Point3d;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -21,8 +22,7 @@ class Player extends Sprite {
 	
 	Player( GameRuntime.StageData stageData ) {
 		super(stageData);
-    	x= -1;
-    	y= 190;
+		coord= new Point3d(-1, 190, 100);
 	}
 
 	@Override
@@ -44,23 +44,22 @@ class Player extends Sprite {
 	}
 
 	private void fixWH() {
-		if ( width != 0 ) return;
+		if ( dimension != null ) return;
 
-        width= mDriveImage.getIntrinsicWidth();
-    	height= mDriveImage.getIntrinsicHeight();
-    	hotx= width / 2;
-    	hoty= height - 8;
+		dimension= new Point3d(
+		    	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
+		);
+		hotspot= new Point3d(dimension.x / 2, dimension.y - 8, 5);
 	}
 	
 	public void addX(double diffx) {
 		fixWH();
-		
-		if ( x < 0 ) x= GameRuntime.mCanvasWidth / 2;
+		if ( coord.x < 0 ) coord.x= GameRuntime.mCanvasWidth / 2;
 
-        x += diffx;
-        if ( x < hotx ) x= hotx;
-        if ( x > GameRuntime.mCanvasWidth - width + hotx ) {
-        	x= GameRuntime.mCanvasWidth - width + hotx;
+        coord.x += diffx;
+        if ( coord.x < hotspot.x ) coord.x= hotspot.x;
+        if ( coord.x > GameRuntime.mCanvasWidth - dimension.x + hotspot.x ) {
+        	coord.x= GameRuntime.mCanvasWidth - dimension.x + hotspot.x;
         }
 	}
 
@@ -70,11 +69,12 @@ class Player extends Sprite {
 
 	@Override
 	public void draw( Canvas canvas ) {
+		Point3d origin= new Point3d(0, 0, 0);
         if ( crash ) {
-        	drawDrawable(canvas, mCrashImage, 0, 0);
+        	drawDrawable(canvas, mCrashImage, origin);
         	return;
         }
-        drawDrawable(canvas, mShadowImage, 0, 0);
-    	drawDrawable(canvas, mDriveImage, 0, 0);
+        drawDrawable(canvas, mShadowImage, origin);
+    	drawDrawable(canvas, mDriveImage, origin);
 	}
 }

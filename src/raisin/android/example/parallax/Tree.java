@@ -3,6 +3,7 @@
  */
 package raisin.android.example.parallax;
 
+import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -35,16 +36,17 @@ class Tree extends Sprite {
 	@Override
 	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
-		width= 128;
-		height= 128;
-		hotx= 64;
-		hoty= 120;
+		dimension= new Point3d(128, 128, 10);
+		hotspot= new Point3d(64, 120, 5);
 	}
 	
 	void randomize() {
     	type= GameRuntime.random.nextInt(TREE_TYPES);
-    	x= GameRuntime.random.nextInt(GameRuntime.mCanvasWidth + width) + hotx;
-    	y= mStageData.top + GameRuntime.mCanvasHeight + hoty;
+		coord= new Point3d(
+				GameRuntime.random.nextDouble() * (GameRuntime.mCanvasWidth + dimension.x + hotspot.x),
+				mStageData.top + GameRuntime.mCanvasHeight + hotspot.y,
+				50
+		);
 	}
 
 	@Override
@@ -53,6 +55,6 @@ class Tree extends Sprite {
 
 	@Override
 	public void draw( Canvas canvas ) {
-		drawDrawable(canvas, mTreeImages[type], 0, 0);
+		drawDrawable(canvas, mTreeImages[type], new Point3d(0, 0, 0));
 	}
 }

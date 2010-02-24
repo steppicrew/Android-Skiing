@@ -3,9 +3,9 @@
  */
 package raisin.android.example.parallax;
 
-import java.io.IOException;
 import java.io.Serializable;
 
+import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -16,11 +16,11 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	// Unserializable
 	protected transient GameRuntime.StageData mStageData;
 	
-	protected transient int width, height;
-	protected transient int hotx, hoty;
+	protected transient Point3d dimension;
+	protected transient Point3d hotspot;
 
 	// Serializable
-	protected double x, y, z;
+	protected Point3d coord;
 
 	Sprite( GameRuntime.StageData stageData ) {
 		init(stageData);
@@ -32,26 +32,40 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	
 	@Override
 	public int compareTo( Sprite another ) {
-		return (int)(y - another.y);
+		Point3d diffPoint= new Point3d();
+		diffPoint.sub(coord, another.coord);
+		// 
+		diffPoint.add(new Point3d(0d, 0d, dimension.z));
+		int zDiff= (int)diffPoint.z;
+		if ( zDiff == 0 ) return (int)diffPoint.y;
+		return zDiff;
 	}
 
 	public abstract void update( GameRuntime.GameState state );
 	public abstract void draw( Canvas canvas );
 
-	protected void drawDrawable( Canvas canvas, Drawable drawable, int ofsx, int ofsy ) {
-		int ix= (int)x - hotx + ofsx;
-		int iy= (int)(y - mStageData.top) - hoty + ofsy;
-		drawable.setBounds(ix, iy, ix + width, iy + height);
+	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
+		Point3d pointHot= new Point3d(hotspot);
+		pointHot.add(ofs);
+		pointHot.sub(coord, new Point3d(0, -mStageData.top, 0));
+		
+		Point3d scaledHalfDimension= new Point3d(dimension);
+		// TODO: make factor (i.e. viewers point) changable
+//		scaledHalfDimension.scaleSelf(ofs.z - pointHot.z);
+
+//		scaledHalfDimension.scaleSelf(0.5d);
+		
+		Point3d pointUpperLeftBack= new Point3d();
+		pointUpperLeftBack.sub(pointHot, scaledHalfDimension);
+		
+		Point3d pointLowerRightFront= new Point3d(pointHot);
+		pointLowerRightFront.add(scaledHalfDimension);
+		
+		// TODO: calculate bounds from all three coordinates
+		drawable.setBounds(
+				pointUpperLeftBack.intX(), pointUpperLeftBack.intY(),
+				pointLowerRightFront.intX(), pointLowerRightFront.intY()
+		);
 		drawable.draw(canvas);
 	}
-
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-    	out.writeDouble(x);
-    	out.writeDouble(y);
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-    	x= in.readDouble();
-    	y= in.readDouble();
-    }
 }
