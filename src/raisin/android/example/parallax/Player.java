@@ -4,6 +4,7 @@
 package raisin.android.example.parallax;
 
 import raisin.android.engine.R;
+import raisin.android.engine.math.Point3d;
 import raisin.android.example.parallax.Parallax.GameState;
 import raisin.android.example.parallax.Parallax.StageData;
 import android.content.Context;
@@ -22,8 +23,7 @@ class Player extends Sprite {
 	
 	Player( StageData stageData ) {
 		super(stageData);
-    	x= -1;
-    	y= 190;
+		coord= new Point3d(-1, 190, 100);
 	}
 
 	@Override
@@ -39,10 +39,10 @@ class Player extends Sprite {
         mShadowImage = context.getResources().getDrawable(R.drawable.player_shadow);
         mCrashImage = context.getResources().getDrawable(R.drawable.player_crash);
 
-        width= mDriveImage.getIntrinsicWidth();
-    	height= mDriveImage.getIntrinsicHeight();
-    	hotx= width / 2;
-    	hoty= height - 8;
+        dimension= new Point3d(
+        	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
+        );
+        hotspot= new Point3d(dimension.x / 2, dimension.y - 8, 5);
 	}
 
 	public void setCrash( boolean crash ) {
@@ -50,12 +50,12 @@ class Player extends Sprite {
 	}
 
 	public void addX(double diffx) {
-		if ( x < 0 ) x= mStageData.mCanvasWidth / 2;
+		if ( coord.x < 0 ) coord.x= mStageData.mCanvasWidth / 2;
 
-        x += diffx;
-        if ( x < hotx ) x= hotx;
-        if ( x > mStageData.mCanvasWidth - width + hotx ) {
-        	x= mStageData.mCanvasWidth - width + hotx;
+        coord.x += diffx;
+        if ( coord.x < hotspot.x ) coord.x= hotspot.x;
+        if ( coord.x > mStageData.mCanvasWidth - dimension.x + hotspot.x ) {
+        	coord.x= mStageData.mCanvasWidth - dimension.x + hotspot.x;
         }
 	}
 
@@ -65,11 +65,12 @@ class Player extends Sprite {
 
 	@Override
 	public void draw( Canvas canvas ) {
+		Point3d origin= new Point3d(0, 0, 0);
         if ( crash ) {
-        	drawDrawable(canvas, mCrashImage, 0, 0);
+        	drawDrawable(canvas, mCrashImage, origin);
         	return;
         }
-        drawDrawable(canvas, mShadowImage, 0, 0);
-    	drawDrawable(canvas, mDriveImage, 0, 0);
+        drawDrawable(canvas, mShadowImage, origin);
+    	drawDrawable(canvas, mDriveImage, origin);
 	}
 }
