@@ -31,159 +31,17 @@ import android.view.View;
 public final class Parallax extends GameRuntime implements SensorEventListener, Serializable {
 
 	private static final int MAX_TREES= 8;
-	private static final int TREE_TYPES= 4;
+	static final int TREE_TYPES= 4;
 
 	public static enum GameState {
 		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
 	};
 	
-	private static class StageData {
+	public static class StageData {
 		public double top;
 	    public transient int mCanvasHeight = 1;
 	    public transient int mCanvasWidth = 1;
 		public transient Drawable[] mTreeImages;
-	}
-
-	private static abstract class Sprite implements Comparable<Sprite>, Serializable {
-
-		// Unserializable
-		protected transient StageData mStageData;
-		
-		protected transient int width, height;
-		protected transient int hotx, hoty;
-
-		// Serializable
-		protected double x, y, z;
-
-		Sprite( StageData stageData ) {
-			init(stageData);
-		}
-
-		public void init( StageData stageData ) {
-			this.mStageData= stageData;
-		}
-		
-		@Override
-		public int compareTo( Sprite another ) {
-			return (int)(y - another.y);
-		}
-
-		public abstract void update( GameState state );
-		public abstract void draw( Canvas canvas );
-
-		void drawDrawable( Canvas canvas, Drawable drawable, int ofsx, int ofsy ) {
-			int ix= (int)x - hotx + ofsx;
-			int iy= (int)(y - mStageData.top) - hoty + ofsy;
-			drawable.setBounds(ix, iy, ix + width, iy + height);
-			drawable.draw(canvas);
-		}
-
-		private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-	    	out.writeDouble(x);
-	    	out.writeDouble(y);
-	    }
-
-	    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-	    	x= in.readDouble();
-	    	y= in.readDouble();
-	    }
-	}
-	
-	private static class Tree extends Sprite {
-
-		// Serializable
-		private int type;
-
-		Tree( StageData stageData ) {
-			super(stageData);
-		}
-		
-		@Override
-		public void init( StageData stageData ) {
-			super.init(stageData);
-			width= 128;
-			height= 128;
-			hotx= 64;
-			hoty= 120;
-		}
-		
-		void randomize() {
-        	type= random.nextInt(TREE_TYPES);
-        	x= random.nextInt(mStageData.mCanvasWidth + width) + hotx;
-        	y= mStageData.top + mStageData.mCanvasHeight + hoty;
-		}
-
-		@Override
-		public void update( GameState state ) {
-		}
-
-		@Override
-		public void draw( Canvas canvas ) {
-			drawDrawable(canvas, mStageData.mTreeImages[type], 0, 0);
-		}
-	}
-
-	private static class Player extends Sprite {
-
-		private transient Drawable mDriveImage;
-		private transient Drawable mShadowImage;
-		private transient Drawable mCrashImage;
-		
-		// Serializable
-		private boolean crash;
-		
-		Player( StageData stageData ) {
-			super(stageData);
-	    	x= -1;
-	    	y= 190;
-		}
-
-		@Override
-		public void init( StageData stageData ) {
-			super.init(stageData);
-		}
-
-		void fixContext( Context context ) {
-
-			if ( mDriveImage != null ) return;
-			
-			mDriveImage = context.getResources().getDrawable(R.drawable.player);
-	        mShadowImage = context.getResources().getDrawable(R.drawable.player_shadow);
-	        mCrashImage = context.getResources().getDrawable(R.drawable.player_crash);
-
-	        width= mDriveImage.getIntrinsicWidth();
-        	height= mDriveImage.getIntrinsicHeight();
-        	hotx= width / 2;
-        	hoty= height - 8;
-		}
-
-		public void setCrash( boolean crash ) {
-			this.crash= crash;
-		}
-
-		public void addX(double diffx) {
-			if ( x < 0 ) x= mStageData.mCanvasWidth / 2;
-
-	        x += diffx;
-	        if ( x < hotx ) x= hotx;
-	        if ( x > mStageData.mCanvasWidth - width + hotx ) {
-	        	x= mStageData.mCanvasWidth - width + hotx;
-	        }
-		}
-
-		@Override
-		public void update( GameState state ) {
-		}
-
-		@Override
-		public void draw( Canvas canvas ) {
-	        if ( crash ) {
-	        	drawDrawable(canvas, mCrashImage, 0, 0);
-	        	return;
-	        }
-	        drawDrawable(canvas, mShadowImage, 0, 0);
-        	drawDrawable(canvas, mDriveImage, 0, 0);
-		}
 	}
 
 	private final static int speed= 300;

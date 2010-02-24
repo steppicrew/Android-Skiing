@@ -25,7 +25,7 @@ public class GameRuntime implements Serializable {
 	private static GameRuntime instance;
 	protected static Context mContext;
 
-	protected static Random random= new Random();
+	public static Random random= new Random();
 
 	static public GameRuntime instance( Context context ) {
 		if ( instance == null ) {
