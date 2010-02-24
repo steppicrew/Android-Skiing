@@ -1,15 +1,18 @@
 package raisin.android.engine.math;
 
+import java.io.Serializable;
+
 /**
  * 
  * This class is used to store a point in a 3D space
  * 
  */
-public final class Point3d {
+@SuppressWarnings("serial")
+public final class Point3d implements Serializable {
 
-    public double x = 0.f;
-    public double y = 0.f;
-    public double z = 0.f;
+    public double x;
+    public double y;
+    public double z;
 
     public Point3d() {
 
