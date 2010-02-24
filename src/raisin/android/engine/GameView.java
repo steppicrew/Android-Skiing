@@ -1,4 +1,4 @@
-package raisin.android.skiing;
+package raisin.android.engine;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -49,7 +49,7 @@ public class GameView extends SurfaceView
                 try {
                     canvas = mSurfaceHolder.lockCanvas(null);
                     synchronized (mSurfaceHolder) {
-                    	GameBase.instance(mContext).refresh(canvas);
+                    	GameRuntime.instance(mContext).refresh(canvas);
                     }
                 } finally {
                     // do this in a finally so that if an exception is thrown
@@ -60,20 +60,20 @@ public class GameView extends SurfaceView
                     }
                 }
             }
-        	GameBase.instance(mContext).destroy();
+        	GameRuntime.instance(mContext).destroy();
         	Log.w("GameThread", "run end");
         }
 
         public void setSurfaceSize(int width, int height) {
             // synchronized to make sure these all change atomically
             synchronized (mSurfaceHolder) {
-            	GameBase.instance(mContext).setSurfaceSize(width, height);
+            	GameRuntime.instance(mContext).setSurfaceSize(width, height);
             }
         }
 
         public void restart() {
             synchronized (mSurfaceHolder) {
-            	GameBase.instance(mContext).restart();
+            	GameRuntime.instance(mContext).restart();
             }
         }
         
@@ -81,7 +81,7 @@ public class GameView extends SurfaceView
          	Log.w("GameThread", "pause start");
  
             synchronized (mSurfaceHolder) {
-            	GameBase.instance(mContext).pause();
+            	GameRuntime.instance(mContext).pause();
             }
         	Log.w("GameThread", "pause end");
         }
@@ -89,14 +89,14 @@ public class GameView extends SurfaceView
         public void unpause() {
         	Log.w("GameThread", "unpause start");
             synchronized (mSurfaceHolder) {
-            	GameBase.instance(mContext).unpause();
+            	GameRuntime.instance(mContext).unpause();
             }
         	Log.w("GameThread", "unpause end");
         }
 
 		public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
             synchronized (mSurfaceHolder) {
-            	return GameBase.instance(mContext).handleKeyEvent(v, keyCode, event);
+            	return GameRuntime.instance(mContext).handleKeyEvent(v, keyCode, event);
             }
 		}
 	}
@@ -151,7 +151,7 @@ public class GameView extends SurfaceView
         setOnKeyListener(this);
         setOnTouchListener(this);
         
-        GameBase.thaw(mContext);
+        GameRuntime.thaw(mContext);
         
 		thread.setRunning(true);
     	Log.w("GameThread", "thread.start start");
@@ -174,7 +174,7 @@ public class GameView extends SurfaceView
         }
     	Log.w("GameThread", "thread.join end");
 
-    	GameBase.freeze();
+    	GameRuntime.freeze();
 
     	thread= null;
 	}
