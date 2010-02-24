@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 import raisin.android.engine.GameRuntime;
-import raisin.android.skiing.R;
+import raisin.android.engine.R;
 
 import android.content.Context;
 import android.content.res.Resources;
