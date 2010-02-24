@@ -188,17 +188,25 @@ public final class Point3d {
     	this.z += vector2.z;
     }
     
+    public final void sub(final Point3d other) {
+    	this.x -= other.x;
+    	this.y -= other.y;
+    	this.z -= other.z;
+    }    
+
     public void negate(Point3d vector) {
     	this.x = -this.x;
     	this.y = -this.y;
     	this.z = -this.z;
     }
     
+    // TODO. rename to diff
     public final void sub(final Point3d a, final Point3d b) {
     	this.x = a.x - b.x;
     	this.y = a.y - b.y;
     	this.z = a.z - b.z;
     }    
+
     /*
     public void rotateToDirection (float pitch, float azimuth) {
     	this.x =  (float)(-Math.sin(Math.toRadians(azimuth)) * Math.cos(Math.toRadians(pitch)));
