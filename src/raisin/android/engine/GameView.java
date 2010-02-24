@@ -48,8 +48,16 @@ public class GameView extends SurfaceView
                 Canvas canvas = null;
                 try {
                     canvas = mSurfaceHolder.lockCanvas(null);
+                    boolean doSleep;
                     synchronized (mSurfaceHolder) {
-                    	GameRuntime.instance(mContext).refresh(canvas);
+                    	doSleep= GameRuntime.instance(mContext).refresh(canvas);
+                    }
+                    if ( doSleep ) {
+						try {
+							Log.w("Sleeping...", "");
+							sleep(100);
+						} catch (InterruptedException e) {
+						}
                     }
                 } finally {
                     // do this in a finally so that if an exception is thrown

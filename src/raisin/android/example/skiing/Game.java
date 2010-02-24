@@ -536,10 +536,11 @@ public final class Game extends GameRuntime implements SensorEventListener, Seri
     }
 
     @Override
-    public void refresh( Canvas canvas ) {
+    public boolean refresh( Canvas canvas ) {
         fixContent();
     	update();
     	draw(canvas);
+    	return false;
     }
 
 	@Override

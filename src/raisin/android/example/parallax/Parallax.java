@@ -240,6 +240,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     }
 
     private boolean crashing() {
+    	
+    	// FIXME: Bug: Gibt bei PAUSE true zurueck
     	return !mCrashUntilTime.runOut() || lifes == 0;
     }
     
@@ -300,10 +302,11 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     }
 
     @Override
-    public void refresh( Canvas canvas ) {
+    public boolean refresh( Canvas canvas ) {
         fixContent();
         if ( gameState == GameRuntime.GameState.RUNNING ) update();
     	draw(canvas);
+    	return gameState == GameRuntime.GameState.PAUSE;
     }
 
 	@Override
@@ -395,16 +398,4 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 		}
 		return false;
 	}
-
-	@Override
-    public void pause() {
-		super.pause();
-        setState(GameRuntime.GameState.PAUSE);
-    }
-
-	@Override
-    public void unpause() {
-		super.unpause();
-        setState(GameRuntime.GameState.RUNNING);
-    }
 }

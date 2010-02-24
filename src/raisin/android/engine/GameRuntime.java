@@ -133,16 +133,16 @@ public class GameRuntime implements Serializable {
 		return false;
 	}
 
-	public void pause() {
-    	// Empty
-	}
+    public void pause() {
+        setState(GameRuntime.GameState.PAUSE);
+    }
 
-	public void unpause() {
-    	// Empty
-	}
+    public void unpause() {
+        setState(GameRuntime.GameState.RUNNING);
+    }
 
-	public void refresh(Canvas canvas) {
-    	// Empty
+	public boolean refresh(Canvas canvas) {
+    	return false;
 	}
 
 }
