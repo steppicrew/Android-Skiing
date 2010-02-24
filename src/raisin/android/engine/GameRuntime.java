@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
+import raisin.android.engine.math.Point3d;
+
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -24,21 +26,20 @@ public class GameRuntime implements Serializable {
 		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
 	}
 
-	public static class StageData {
-		public double top;
+	public static class Stage {
+		public Point3d origin= new Point3d();
 	}
 
 	public static Random random= new Random();
 
 	public static transient int mCanvasHeight = 1;
-
 	public static transient int mCanvasWidth = 1;
 
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
 	private static GameRuntime instance;
 	
-    protected static GameRuntime.StageData mStageData= new GameRuntime.StageData();
+    protected static GameRuntime.Stage mStage= new GameRuntime.Stage();
 
     // Unserializable
 

@@ -20,13 +20,13 @@ class Player extends Sprite {
 	// Serializable
 	private boolean crash;
 	
-	Player( GameRuntime.StageData stageData ) {
+	Player( GameRuntime.Stage stageData ) {
 		super(stageData);
 		coord= new Point3d(-1, 190, 100);
 	}
 
 	@Override
-	public void init( GameRuntime.StageData stageData ) {
+	public void init( GameRuntime.Stage stageData ) {
 		super.init(stageData);
 	}
 

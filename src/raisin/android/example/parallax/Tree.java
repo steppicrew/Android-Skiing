@@ -18,7 +18,7 @@ class Tree extends Sprite {
 	// Serializable
 	private int type;
 
-	Tree( GameRuntime.StageData stageData ) {
+	Tree( GameRuntime.Stage stageData ) {
 		super(stageData);
 	}
 
@@ -34,7 +34,7 @@ class Tree extends Sprite {
 	}
 	
 	@Override
-	public void init( GameRuntime.StageData stageData ) {
+	public void init( GameRuntime.Stage stageData ) {
 		super.init(stageData);
 		dimension= new Point3d(128, 128, 10);
 		hotspot= new Point3d(64, 120, 5);
@@ -44,7 +44,7 @@ class Tree extends Sprite {
     	type= GameRuntime.random.nextInt(TREE_TYPES);
 		coord= new Point3d(
 				GameRuntime.random.nextDouble() * (GameRuntime.mCanvasWidth + dimension.x + hotspot.x),
-				mStageData.top + GameRuntime.mCanvasHeight + hotspot.y,
+				mStageData.origin.y + GameRuntime.mCanvasHeight + hotspot.y,
 				50
 		);
 	}

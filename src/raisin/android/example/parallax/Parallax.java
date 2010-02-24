@@ -43,7 +43,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     private float accel;
     private float fspeed;
 
-	private Player player= new Player(mStageData);
+	private Player player= new Player(mStage);
 
     private List<Tree> mTrees= new ArrayList<Tree>();
 
@@ -88,11 +88,11 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     public void restart() {
     	super.restart();
 
-    	mStageData= new GameRuntime.StageData();
+    	mStage= new GameRuntime.Stage();
         sprites= new ArrayList<Sprite>();
         mTrees= new ArrayList<Tree>();
 
-    	player= new Player(mStageData);
+    	player= new Player(mStage);
     	
     	GameTime.reset();
         mPlayerLastMoveTime= GameTime.newInstance();
@@ -100,7 +100,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         mCrashUntilTime= GameTime.newInstance();
 
         lifes= 5;
-    	mStageData.top= 0;
+    	mStage.origin.y= 0;
     	score= 0;
 
         accel= 0;
@@ -112,7 +112,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
     	out.writeInt(gameState.ordinal());
     	out.writeInt(lifes);
-    	out.writeDouble(mStageData.top);
+    	out.writeDouble(mStage.origin.y);
     	out.writeDouble(score);
     	out.writeLong(mNextTreeTime.getOffset());
     	out.writeLong(mCrashUntilTime.getOffset());
@@ -128,18 +128,18 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         restart();
     	gameState= GameRuntime.GameState.values()[in.readInt()];
     	lifes= in.readInt();
-    	mStageData.top= in.readFloat();
+    	mStage.origin.y= in.readFloat();
     	score= in.readDouble();
         mNextTreeTime.readFromStream(in);
         mCrashUntilTime.readFromStream(in);
     	accel= in.readFloat();
     	fspeed= in.readFloat();
     	player= (Player) in.readObject();
-    	player.init(mStageData);
+    	player.init(mStage);
     	mTrees.clear();
     	for ( int i= in.readInt(); i > 0; i-- ) {
     		Tree tree= (Tree) in.readObject();
-    		tree.init(mStageData);
+    		tree.init(mStage);
     		mTrees.add(tree);
     	}
     }
@@ -211,7 +211,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 	        fspeed = speed * accel;
         }
 
-        mStageData.top += elapsed * fspeed;
+        mStage.origin.y += elapsed * fspeed;
         player.coord.y += elapsed * fspeed;
 	        
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
@@ -222,7 +222,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
             Iterator<Tree> it = mTrees.iterator();
             while ( it.hasNext() ){
             	Tree tree= it.next();
-            	if ( tree.coord.y < mStageData.top - tree.dimension.y ) {
+            	if ( tree.coord.y < mStage.origin.y - tree.dimension.y ) {
             		sprites.remove(tree);
             		it.remove();
             		// rebuildSpriteList= true;
@@ -230,7 +230,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
             }
 
         	if ( mTrees.size() < MAX_TREES ) {
-	        	Tree tree= new Tree(mStageData);
+	        	Tree tree= new Tree(mStage);
 	        	tree.randomize();
 	        	mTrees.add(tree);
         		sprites.add(tree);
@@ -274,7 +274,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	int width= mBackgroundImage.getWidth();
         int height= mBackgroundImage.getHeight();
 
-        int ytop= -((int)mStageData.top % height);
+        int ytop= -((int)mStage.origin.y % height);
         for ( int y = ytop; y < GameRuntime.mCanvasHeight - ytop; y += height ) {
     		for ( int x = 0; x < GameRuntime.mCanvasWidth; x += width ) {
             	canvas.drawBitmap(mBackgroundImage, x, y, null);
