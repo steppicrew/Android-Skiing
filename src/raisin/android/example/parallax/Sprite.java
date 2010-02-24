@@ -6,7 +6,8 @@ package raisin.android.example.parallax;
 import java.io.IOException;
 import java.io.Serializable;
 
-import raisin.android.example.parallax.Parallax.GameState;
+import raisin.android.engine.GameRuntime;
+import raisin.android.engine.GameRuntime.GameState;
 import raisin.android.example.parallax.Parallax.StageData;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -36,7 +37,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		return (int)(y - another.y);
 	}
 
-	public abstract void update( GameState state );
+	public abstract void update( GameRuntime.GameState state );
 	public abstract void draw( Canvas canvas );
 
 	protected void drawDrawable( Canvas canvas, Drawable drawable, int ofsx, int ofsy ) {

@@ -3,8 +3,8 @@
  */
 package raisin.android.example.parallax;
 
+import raisin.android.engine.GameRuntime;
 import raisin.android.engine.R;
-import raisin.android.example.parallax.Parallax.GameState;
 import raisin.android.example.parallax.Parallax.StageData;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,9 +13,9 @@ import android.graphics.drawable.Drawable;
 @SuppressWarnings("serial")
 class Player extends Sprite {
 
-	private transient Drawable mDriveImage;
-	private transient Drawable mShadowImage;
-	private transient Drawable mCrashImage;
+	private static transient Drawable mDriveImage;
+	private static transient Drawable mShadowImage;
+	private static transient Drawable mCrashImage;
 	
 	// Serializable
 	private boolean crash;
@@ -31,25 +31,31 @@ class Player extends Sprite {
 		super.init(stageData);
 	}
 
-	void fixContext( Context context ) {
+	public static void fixContext( Context context ) {
 
 		if ( mDriveImage != null ) return;
 		
 		mDriveImage = context.getResources().getDrawable(R.drawable.player);
         mShadowImage = context.getResources().getDrawable(R.drawable.player_shadow);
         mCrashImage = context.getResources().getDrawable(R.drawable.player_crash);
-
-        width= mDriveImage.getIntrinsicWidth();
-    	height= mDriveImage.getIntrinsicHeight();
-    	hotx= width / 2;
-    	hoty= height - 8;
 	}
 
 	public void setCrash( boolean crash ) {
 		this.crash= crash;
 	}
 
+	private void fixWH() {
+		if ( width != 0 ) return;
+
+        width= mDriveImage.getIntrinsicWidth();
+    	height= mDriveImage.getIntrinsicHeight();
+    	hotx= width / 2;
+    	hoty= height - 8;
+	}
+	
 	public void addX(double diffx) {
+		fixWH();
+		
 		if ( x < 0 ) x= mStageData.mCanvasWidth / 2;
 
         x += diffx;
@@ -60,7 +66,7 @@ class Player extends Sprite {
 	}
 
 	@Override
-	public void update( GameState state ) {
+	public void update( GameRuntime.GameState state ) {
 	}
 
 	@Override

@@ -8,10 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-import raisin.android.example.parallax.Parallax;
-import raisin.android.example.parallax.Parallax.GameState;
-import raisin.android.example.skiing.Game;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.KeyEvent;
@@ -19,6 +15,10 @@ import android.view.View;
 
 @SuppressWarnings("serial")
 public class GameRuntime implements Serializable {
+
+	public static enum GameState {
+		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
+	}
 
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
@@ -53,7 +53,7 @@ public class GameRuntime implements Serializable {
 		try {
     		ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
     		ObjectInputStream ois= new ObjectInputStream(bais);
-    		instance= (Game) ois.readObject();
+    		instance= (GameRuntime) ois.readObject();
     		instance.init(context);
     		ois.close();
         } catch (IOException e) {

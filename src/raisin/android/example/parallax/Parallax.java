@@ -31,35 +31,24 @@ import android.view.View;
 public final class Parallax extends GameRuntime implements SensorEventListener, Serializable {
 
 	private static final int MAX_TREES= 8;
-	static final int TREE_TYPES= 4;
 
-	public static enum GameState {
-		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
-	};
-	
 	public static class StageData {
 		public double top;
 	    public transient int mCanvasHeight = 1;
 	    public transient int mCanvasWidth = 1;
-		public transient Drawable[] mTreeImages;
 	}
 
 	private final static int speed= 300;
 
 	// Serializable
-	private GameState gameState;
+	private GameRuntime.GameState gameState;
 	
 	private int lifes;
 	private double score;
 
-    private transient GameTime GTmPlayerLastMoveTime;
-    private GameTime GTmNextTreeTime;
-    private GameTime GTmCrashUntilTime;
+    private GameTime mNextTreeTime;
+    private GameTime mCrashUntilTime;
 	
-    // private long mNextTreeTime;
-    // private long playerLastMoveTime;
-    // private long crashUntilTime;
-
     private float accel;
     private float fspeed;
 
@@ -69,9 +58,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     private List<Tree> mTrees= new ArrayList<Tree>();
 
 	// Unserializable
-    // private transient long mLastTime;
-    
-	private transient float playerMoveX;
+    private transient GameTime mPlayerLastMoveTime;
+
+    private transient float playerMoveX;
 	private transient float playerMoveY;
 
 	private transient boolean rebuildSpriteList;
@@ -116,9 +105,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	player= new Player(mStageData);
     	
     	GameTime.reset();
-        GTmPlayerLastMoveTime= GameTime.newInstance();
-        GTmNextTreeTime= GameTime.newInstance();
-        GTmCrashUntilTime= GameTime.newInstance();
+        mPlayerLastMoveTime= GameTime.newInstance();
+        mNextTreeTime= GameTime.newInstance();
+        mCrashUntilTime= GameTime.newInstance();
 
         lifes= 5;
     	mStageData.top= 0;
@@ -127,7 +116,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         accel= 0;
         fspeed= 0;
     	rebuildSpriteList= true;
-    	gameState= GameState.RUNNING;
+    	gameState= GameRuntime.GameState.RUNNING;
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -135,8 +124,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	out.writeInt(lifes);
     	out.writeDouble(mStageData.top);
     	out.writeDouble(score);
-    	out.writeLong(GTmNextTreeTime.getOffset());
-    	out.writeLong(GTmCrashUntilTime.getOffset());
+    	out.writeLong(mNextTreeTime.getOffset());
+    	out.writeLong(mCrashUntilTime.getOffset());
     	out.writeFloat(accel);
     	out.writeFloat(fspeed);
     	out.writeObject(player);
@@ -147,12 +136,12 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 
         restart();
-    	gameState= GameState.values()[in.readInt()];
+    	gameState= GameRuntime.GameState.values()[in.readInt()];
     	lifes= in.readInt();
     	mStageData.top= in.readDouble();
     	score= in.readDouble();
-        GTmNextTreeTime.readFromStream(in);
-        GTmCrashUntilTime.readFromStream(in);
+        mNextTreeTime.readFromStream(in);
+        mCrashUntilTime.readFromStream(in);
     	accel= in.readFloat();
     	fspeed= in.readFloat();
     	player= (Player) in.readObject();
@@ -179,17 +168,11 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
             mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.snow);
     	}
 
-    	player.fixContext(mContext);
-
-    	if ( mStageData.mTreeImages == null ) {
+    	Player.fixContext(mContext);
+    	Tree.fixContent(mContext);
     	
-    		mStageData.mTreeImages= new Drawable[TREE_TYPES];
-	    	String prefix= GameRuntime.class.getPackage().getName() + ":drawable/tree";
-	        for ( int i= 0; i < TREE_TYPES; i++ ) {
-		        int id= mContext.getResources().getIdentifier(prefix + (i + 1), null, null);
-		        mStageData.mTreeImages[i]= mContext.getResources().getDrawable(id);
-	        }
-	
+    	if ( mScoreTextPaint == null ) {
+    	
 	        mScoreTextPaint= new Paint();
 	        mScoreTextPaint.setTextSize(50f);
 	
@@ -214,10 +197,10 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     }
 
     // Check Integrity
-    private void setState( GameState state ) {
+    private void setState( GameRuntime.GameState state ) {
     	switch ( state ) {
 	    	case PAUSE:
-	    		if ( gameState == GameState.RUNNING ) {
+	    		if ( gameState == GameRuntime.GameState.RUNNING ) {
 	    	        GameTime.stop();
 	    			gameState= state;
 	    			break;
@@ -225,7 +208,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 	    		break;
 
 	    	case RUNNING:
-	    		if ( gameState == GameState.PAUSE ) {
+	    		if ( gameState == GameRuntime.GameState.PAUSE ) {
 	    			gameState= state;
 	    			break;
 	    		}
@@ -240,8 +223,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         
         double elapsed = GameTime.getElapsed();
 
-        if ( GTmPlayerLastMoveTime.runOut() ) {
-        	GTmPlayerLastMoveTime.setOffset(10);
+        if ( mPlayerLastMoveTime.runOut() ) {
+        	mPlayerLastMoveTime.setOffset(10);
         
         	if ( lifes == 0 ) {
         		accel -= 0.03f;
@@ -271,8 +254,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 	        
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
 
-        if ( GTmNextTreeTime.runOut() ) {
-        	GTmNextTreeTime.setOffset(1000);
+        if ( mNextTreeTime.runOut() ) {
+        	mNextTreeTime.setOffset(1000);
 
             Iterator<Tree> it = mTrees.iterator();
             while ( it.hasNext() ){
@@ -295,7 +278,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     }
 
     private boolean crashing() {
-    	return !GTmCrashUntilTime.runOut() || lifes == 0;
+    	return !mCrashUntilTime.runOut() || lifes == 0;
     }
     
     private boolean crashed() {
@@ -316,7 +299,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 
     		if ( py < treeTop || py > treeBottom ) continue;
 
-    		GTmCrashUntilTime.setOffset(1500);
+    		mCrashUntilTime.setOffset(1500);
     		if ( lifes > 0 ) lifes--;
     		return true;
     	}
@@ -341,13 +324,14 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         if ( rebuildSpriteList ) buildSpriteList();
 	    Collections.sort(sprites);
 
-	    for ( Sprite sprite: sprites )
+	    for ( Sprite sprite: sprites ) {
 	    	sprite.draw(canvas);
+	    }
 
     	canvas.drawText("" + (int)(score), 40, 60, mScoreTextPaint);
     	canvas.drawText("" + lifes + " to go", mStageData.mCanvasWidth - 40, 60, mHitsTextPaint);
 
-    	if ( gameState == GameState.PAUSE ) {
+    	if ( gameState == GameRuntime.GameState.PAUSE ) {
     		canvas.drawText("PAUSED", mStageData.mCanvasWidth / 2, mStageData.mCanvasHeight / 2, mStatusTextPaint);
     	}
     
@@ -356,12 +340,12 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     @Override
     public void refresh( Canvas canvas ) {
         fixContent();
-        if ( gameState == GameState.RUNNING ) update();
+        if ( gameState == GameRuntime.GameState.RUNNING ) update();
     	draw(canvas);
     }
 
 	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+	public void onAccuracyChanged( Sensor sensor, int accuracy ) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -423,8 +407,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 					case KeyEvent.KEYCODE_P:
 					case KeyEvent.KEYCODE_SPACE:
 						if ( !pauseKeyPressed ) {
-							if ( gameState == GameState.RUNNING ) setState(GameState.PAUSE);
-							else if ( gameState == GameState.PAUSE ) setState(GameState.RUNNING);
+							if ( gameState == GameRuntime.GameState.RUNNING ) setState(GameRuntime.GameState.PAUSE);
+							else if ( gameState == GameRuntime.GameState.PAUSE ) setState(GameRuntime.GameState.RUNNING);
 						}
 						pauseKeyPressed= true;
 						return true;
@@ -453,12 +437,12 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 	@Override
     public void pause() {
 		super.pause();
-        setState(GameState.PAUSE);
+        setState(GameRuntime.GameState.PAUSE);
     }
 
 	@Override
     public void unpause() {
 		super.unpause();
-        setState(GameState.RUNNING);
+        setState(GameRuntime.GameState.RUNNING);
     }
 }
