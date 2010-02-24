@@ -1,6 +1,8 @@
-package raisin.android.skiing;
+package raisin.android.engine;
 
 import raisin.android.skiing.R;
+import raisin.android.skiing.R.id;
+import raisin.android.skiing.R.layout;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;

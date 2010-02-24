@@ -1,4 +1,4 @@
-package raisin.android.skiing;
+package raisin.android.engine;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,7 +8,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-import raisin.android.skiing.ParallaxGame.GameState;
+import raisin.android.example.parallax.Parallax;
+import raisin.android.example.parallax.Parallax.GameState;
+import raisin.android.example.skiing.Game;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,18 +18,18 @@ import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public class GameBase implements Serializable {
+public class GameRuntime implements Serializable {
 
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
-	private static GameBase instance;
+	private static GameRuntime instance;
 	protected static Context mContext;
 
 	protected static Random random= new Random();
 
-	static public GameBase instance( Context context ) {
+	static public GameRuntime instance( Context context ) {
 		if ( instance == null ) {
-			instance= new ParallaxGame();
+			instance= new raisin.android.example.parallax.Parallax();
 			instance.init(context);
 		}
 		return instance;
