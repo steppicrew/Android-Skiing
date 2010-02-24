@@ -6,8 +6,7 @@ package raisin.android.example.parallax;
 import java.io.Serializable;
 
 import raisin.android.engine.math.Point3d;
-import raisin.android.example.parallax.Parallax.GameState;
-import raisin.android.example.parallax.Parallax.StageData;
+import raisin.android.engine.GameRuntime;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
@@ -15,7 +14,7 @@ import android.graphics.drawable.Drawable;
 abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 	// Unserializable
-	protected transient StageData mStageData;
+	protected transient GameRuntime.StageData mStageData;
 	
 	protected transient Point3d dimension;
 	protected transient Point3d hotspot;
@@ -23,11 +22,11 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	// Serializable
 	protected Point3d coord;
 
-	Sprite( StageData stageData ) {
+	Sprite( GameRuntime.StageData stageData ) {
 		init(stageData);
 	}
 
-	public void init( StageData stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		this.mStageData= stageData;
 	}
 	
@@ -42,7 +41,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		return zDiff;
 	}
 
-	public abstract void update( GameState state );
+	public abstract void update( GameRuntime.GameState state );
 	public abstract void draw( Canvas canvas );
 
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {

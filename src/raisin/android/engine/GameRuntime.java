@@ -8,24 +8,45 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-import raisin.android.example.parallax.Parallax;
-import raisin.android.example.parallax.Parallax.GameState;
-import raisin.android.example.skiing.Game;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
 public class GameRuntime implements Serializable {
 
+	// Static data
+	
+	public static enum GameState {
+		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
+	}
+
+	public static class StageData {
+		public double top;
+	}
+
+	public static Random random= new Random();
+
+	public static transient int mCanvasHeight = 1;
+
+	public static transient int mCanvasWidth = 1;
+
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
 	private static GameRuntime instance;
-	protected static Context mContext;
+	
+    protected static GameRuntime.StageData mStageData= new GameRuntime.StageData();
 
-	public static Random random= new Random();
+    // Unserializable
+
+	protected transient Context mContext;
+
+	// Serializable
+
+	protected GameRuntime.GameState gameState;
 
 	static public GameRuntime instance( Context context ) {
 		if ( instance == null ) {
@@ -53,7 +74,7 @@ public class GameRuntime implements Serializable {
 		try {
     		ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
     		ObjectInputStream ois= new ObjectInputStream(bais);
-    		instance= (Game) ois.readObject();
+    		instance= (GameRuntime) ois.readObject();
     		instance.init(context);
     		ois.close();
         } catch (IOException e) {
@@ -69,6 +90,27 @@ public class GameRuntime implements Serializable {
     	mContext= context;
     }
     
+    // Check Integrity
+    public void setState( GameRuntime.GameState state ) {
+    	switch ( state ) {
+	    	case PAUSE:
+	    		if ( gameState == GameRuntime.GameState.RUNNING ) {
+	    	        GameTime.stop();
+	    			gameState= state;
+	    			break;
+	    		}
+	    		break;
+
+	    	case RUNNING:
+	    		if ( gameState == GameRuntime.GameState.PAUSE ) {
+	    			gameState= state;
+	    			break;
+	    		}
+	    		break;
+    	}
+    	Log.w("setState", "state: " + state + " gameState:" + gameState);
+    }
+    
     public void restart() {
     	// Empty
     }
@@ -78,27 +120,28 @@ public class GameRuntime implements Serializable {
     }
     
     public void setSurfaceSize( int width, int height ) {
-    	// Empty
+        	
+    	Log.w("SetSurfaceSize", "width=" + width + ", height=" + height);
+    	
+    	GameRuntime.mCanvasWidth = width;
+    	GameRuntime.mCanvasHeight = height;
     }
 
 	public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
+    	// Empty
 		return false;
 	}
 
 	public void pause() {
-		// TODO Auto-generated method stub
-		
+    	// Empty
 	}
 
 	public void unpause() {
-		// TODO Auto-generated method stub
-		
+    	// Empty
 	}
 
 	public void refresh(Canvas canvas) {
-		// TODO Auto-generated method stub
-		
+    	// Empty
 	}
 
 }

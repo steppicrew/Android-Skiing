@@ -3,10 +3,9 @@
  */
 package raisin.android.example.parallax;
 
+import raisin.android.engine.GameRuntime;
 import raisin.android.engine.R;
 import raisin.android.engine.math.Point3d;
-import raisin.android.example.parallax.Parallax.GameState;
-import raisin.android.example.parallax.Parallax.StageData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -14,53 +13,58 @@ import android.graphics.drawable.Drawable;
 @SuppressWarnings("serial")
 class Player extends Sprite {
 
-	private transient Drawable mDriveImage;
-	private transient Drawable mShadowImage;
-	private transient Drawable mCrashImage;
+	private static transient Drawable mDriveImage;
+	private static transient Drawable mShadowImage;
+	private static transient Drawable mCrashImage;
 	
 	// Serializable
 	private boolean crash;
 	
-	Player( StageData stageData ) {
+	Player( GameRuntime.StageData stageData ) {
 		super(stageData);
 		coord= new Point3d(-1, 190, 100);
 	}
 
 	@Override
-	public void init( StageData stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
 	}
 
-	void fixContext( Context context ) {
+	public static void fixContext( Context context ) {
 
 		if ( mDriveImage != null ) return;
 		
 		mDriveImage = context.getResources().getDrawable(R.drawable.player);
         mShadowImage = context.getResources().getDrawable(R.drawable.player_shadow);
         mCrashImage = context.getResources().getDrawable(R.drawable.player_crash);
-
-        dimension= new Point3d(
-        	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
-        );
-        hotspot= new Point3d(dimension.x / 2, dimension.y - 8, 5);
 	}
 
 	public void setCrash( boolean crash ) {
 		this.crash= crash;
 	}
 
+	private void fixWH() {
+		if ( dimension != null ) return;
+
+		dimension= new Point3d(
+		    	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
+		);
+		hotspot= new Point3d(dimension.x / 2, dimension.y - 8, 5);
+	}
+	
 	public void addX(double diffx) {
-		if ( coord.x < 0 ) coord.x= mStageData.mCanvasWidth / 2;
+		fixWH();
+		if ( coord.x < 0 ) coord.x= GameRuntime.mCanvasWidth / 2;
 
         coord.x += diffx;
         if ( coord.x < hotspot.x ) coord.x= hotspot.x;
-        if ( coord.x > mStageData.mCanvasWidth - dimension.x + hotspot.x ) {
-        	coord.x= mStageData.mCanvasWidth - dimension.x + hotspot.x;
+        if ( coord.x > GameRuntime.mCanvasWidth - dimension.x + hotspot.x ) {
+        	coord.x= GameRuntime.mCanvasWidth - dimension.x + hotspot.x;
         }
 	}
 
 	@Override
-	public void update( GameState state ) {
+	public void update( GameRuntime.GameState state ) {
 	}
 
 	@Override
