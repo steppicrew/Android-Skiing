@@ -45,15 +45,16 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	public abstract void draw( Canvas canvas );
 
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
-		Point3d pointHot= new Point3d(hotspot);
+		Point3d pointHot= new Point3d(coord);
 		pointHot.add(ofs);
-		pointHot.sub(coord, new Point3d(0, -mStageData.top, 0));
+		pointHot.sub(hotspot);
+		pointHot.sub(new Point3d(0, mStageData.top, 0));
 		
 		Point3d scaledHalfDimension= new Point3d(dimension);
 		// TODO: make factor (i.e. viewers point) changable
 //		scaledHalfDimension.scaleSelf(ofs.z - pointHot.z);
 
-//		scaledHalfDimension.scaleSelf(0.5d);
+		scaledHalfDimension.scaleSelf(0.5d);
 		
 		Point3d pointUpperLeftBack= new Point3d();
 		pointUpperLeftBack.sub(pointHot, scaledHalfDimension);
