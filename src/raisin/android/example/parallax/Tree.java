@@ -4,7 +4,7 @@
 package raisin.android.example.parallax;
 
 import raisin.android.engine.GameRuntime;
-import raisin.android.example.parallax.Parallax.StageData;
+import raisin.android.engine.GameRuntime.StageData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -18,7 +18,7 @@ class Tree extends Sprite {
 	// Serializable
 	private int type;
 
-	Tree( StageData stageData ) {
+	Tree( GameRuntime.StageData stageData ) {
 		super(stageData);
 	}
 
@@ -34,7 +34,7 @@ class Tree extends Sprite {
 	}
 	
 	@Override
-	public void init( StageData stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
 		width= 128;
 		height= 128;
@@ -43,8 +43,8 @@ class Tree extends Sprite {
 	}
 	
 	void randomize() {
-    	type= Parallax.random.nextInt(TREE_TYPES);
-    	x= Parallax.random.nextInt(mStageData.mCanvasWidth + width) + hotx;
+    	type= GameRuntime.random.nextInt(TREE_TYPES);
+    	x= GameRuntime.random.nextInt(mStageData.mCanvasWidth + width) + hotx;
     	y= mStageData.top + mStageData.mCanvasHeight + hoty;
 	}
 

@@ -18,7 +18,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,17 +31,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 
 	private static final int MAX_TREES= 8;
 
-	public static class StageData {
-		public double top;
-	    public transient int mCanvasHeight = 1;
-	    public transient int mCanvasWidth = 1;
-	}
-
 	private final static int speed= 300;
 
 	// Serializable
-	private GameRuntime.GameState gameState;
-	
 	private int lifes;
 	private double score;
 
@@ -52,7 +43,6 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     private float accel;
     private float fspeed;
 
-    StageData mStageData= new StageData();
 	private Player player= new Player(mStageData);
 
     private List<Tree> mTrees= new ArrayList<Tree>();
@@ -98,7 +88,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     public void restart() {
     	super.restart();
 
-    	mStageData= new StageData();
+    	mStageData= new GameRuntime.StageData();
         sprites= new ArrayList<Sprite>();
         mTrees= new ArrayList<Tree>();
 
@@ -196,27 +186,6 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	rebuildSpriteList= false;
     }
 
-    // Check Integrity
-    private void setState( GameRuntime.GameState state ) {
-    	switch ( state ) {
-	    	case PAUSE:
-	    		if ( gameState == GameRuntime.GameState.RUNNING ) {
-	    	        GameTime.stop();
-	    			gameState= state;
-	    			break;
-	    		}
-	    		break;
-
-	    	case RUNNING:
-	    		if ( gameState == GameRuntime.GameState.PAUSE ) {
-	    			gameState= state;
-	    			break;
-	    		}
-	    		break;
-    	}
-    	Log.w("setState", "state: " + state + " gameState:" + gameState);
-    }
-    
     private void update() {
 
         // Log.e("gameState", "" + gameState);

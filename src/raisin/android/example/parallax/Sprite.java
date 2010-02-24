@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameRuntime.GameState;
-import raisin.android.example.parallax.Parallax.StageData;
+import raisin.android.engine.GameRuntime.StageData;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 
@@ -16,7 +16,7 @@ import android.graphics.drawable.Drawable;
 abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 	// Unserializable
-	protected transient StageData mStageData;
+	protected transient GameRuntime.StageData mStageData;
 	
 	protected transient int width, height;
 	protected transient int hotx, hoty;
@@ -24,11 +24,11 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	// Serializable
 	protected double x, y, z;
 
-	Sprite( StageData stageData ) {
+	Sprite( GameRuntime.StageData stageData ) {
 		init(stageData);
 	}
 
-	public void init( StageData stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		this.mStageData= stageData;
 	}
 	

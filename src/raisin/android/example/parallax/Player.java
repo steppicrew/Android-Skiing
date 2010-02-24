@@ -5,7 +5,7 @@ package raisin.android.example.parallax;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.R;
-import raisin.android.example.parallax.Parallax.StageData;
+import raisin.android.engine.GameRuntime.StageData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -20,14 +20,14 @@ class Player extends Sprite {
 	// Serializable
 	private boolean crash;
 	
-	Player( StageData stageData ) {
+	Player( GameRuntime.StageData stageData ) {
 		super(stageData);
     	x= -1;
     	y= 190;
 	}
 
 	@Override
-	public void init( StageData stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
 	}
 

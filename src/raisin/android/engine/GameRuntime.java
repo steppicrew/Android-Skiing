@@ -8,8 +8,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
+
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -20,12 +22,23 @@ public class GameRuntime implements Serializable {
 		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
 	}
 
+	public static class StageData {
+		public double top;
+	    public transient int mCanvasHeight = 1;
+	    public transient int mCanvasWidth = 1;
+	}
+
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
 	private static GameRuntime instance;
 	protected static Context mContext;
+	
+    protected static GameRuntime.StageData mStageData= new GameRuntime.StageData();
 
 	public static Random random= new Random();
+	
+	// Serializable
+	protected GameRuntime.GameState gameState;
 
 	static public GameRuntime instance( Context context ) {
 		if ( instance == null ) {
@@ -67,6 +80,27 @@ public class GameRuntime implements Serializable {
 	
     public void init( Context context ) {
     	mContext= context;
+    }
+    
+    // Check Integrity
+    public void setState( GameRuntime.GameState state ) {
+    	switch ( state ) {
+	    	case PAUSE:
+	    		if ( gameState == GameRuntime.GameState.RUNNING ) {
+	    	        GameTime.stop();
+	    			gameState= state;
+	    			break;
+	    		}
+	    		break;
+
+	    	case RUNNING:
+	    		if ( gameState == GameRuntime.GameState.PAUSE ) {
+	    			gameState= state;
+	    			break;
+	    		}
+	    		break;
+    	}
+    	Log.w("setState", "state: " + state + " gameState:" + gameState);
     }
     
     public void restart() {
