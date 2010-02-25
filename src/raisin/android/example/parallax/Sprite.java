@@ -18,7 +18,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	
 	protected transient Point3d dimension;
 	protected transient Point3d hotspot;
-
+	
 	// Serializable
 	protected Point3d coord;
 
@@ -67,13 +67,21 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
 		if ( hotspot == null || dimension == null ) return;
 		
-		Point3d upperLeftBack= new Point3d(coord)
-			.sub(hotspot)
+		double scaleBy= mStageData.pointOfView.z - coord.z;
+		scaleBy= Math.max(scaleBy / 10, 1);
+//		Point3d pointOfView= new Point3d(mStageData.origin);
+//		pointOfView.z= mStageData.pointOfView.z;
+//		double scaleBy= pointOfView.sub(coord).length();
+		scaleBy= 1 / scaleBy;
+		//		scaleBy= .5d;
+		
+		Point3d upperLeftBack= new Point3d(hotspot).inverse().scaleSelf(scaleBy)
+			.add(coord)
 			.sub(ofs)
 			.sub(mStageData.origin)
 		;
-		Point3d lowerRightFront= new Point3d(upperLeftBack)
-			.add(dimension)
+		Point3d lowerRightFront= new Point3d(dimension).scaleSelf(scaleBy)
+			.add(upperLeftBack)
 		;
 
 //		int width= lowerRightFront.intX() - upperLeftBack.intX();

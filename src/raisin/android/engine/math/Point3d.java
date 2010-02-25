@@ -94,9 +94,9 @@ public final class Point3d implements Serializable {
     public Point3d normalize() {
         double length;
         length = Math.sqrt(x * x + y * y + z * z);
-        x /= (float) length;
-        y /= (float) length;
-        z /= (float) length;
+        x /= length;
+        y /= length;
+        z /= length;
         return this;
     }
 
@@ -118,8 +118,8 @@ public final class Point3d implements Serializable {
         return (v.x - x) * (v.x - x) + (v.y - y) * (v.y - y);
     }
 
-    public float distanceTo2D(float px, float py) {
-        return (float) Math.sqrt((x - px) * (x - px) + (y - py) * (y - py));
+    public double distanceTo2D(double px, double py) {
+        return Math.sqrt((x - px) * (x - px) + (y - py) * (y - py));
     }
     
     public Point3d inverse() {
@@ -129,7 +129,29 @@ public final class Point3d implements Serializable {
     	return this;
     }
     
-    public Point3d rotateXY(float angle) {
+    public Point3d min(double x, double y, double z) {
+    	this.x= Math.min(this.x, x);
+    	this.y= Math.min(this.y, y);
+    	this.z= Math.min(this.z, z);
+    	return this;
+    }
+    
+    public Point3d min(Point3d other) {
+    	return this.min(other.x, other.y, other.z);
+    }
+    
+    public Point3d max(double x, double y, double z) {
+    	this.x= Math.max(this.x, x);
+    	this.y= Math.max(this.y, y);
+    	this.z= Math.max(this.z, z);
+    	return this;
+    }
+    
+    public Point3d max(Point3d other) {
+    	return this.max(other.x, other.y, other.z);
+    }
+    
+    public Point3d rotateXY(double angle) {
         double cosAngle = SinCosTable.cos(angle); //(float) Math.cos(angle);
         double sinAngle = SinCosTable.sin(angle); //(float) Math.sin(angle);
         double oldX = x;
@@ -138,15 +160,15 @@ public final class Point3d implements Serializable {
         return this;
     }
     
-    public float distanceTo(Point3d other) {
+    public double distanceTo(Point3d other) {
     	double deltaX = other.x - this.x;
     	double deltaY = other.y - this.y;
     	double deltaZ = other.z - this.z;
-    	return (float)Math.sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ );
+    	return Math.sqrt(deltaX*deltaX + deltaY*deltaY + deltaZ*deltaZ );
     }
     
-    public float length() {
-    	return (float)Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z)); 
+    public double length() {
+    	return Math.sqrt((this.x * this.x) + (this.y * this.y) + (this.z * this.z)); 
     }
      
     public final double lengthSquared() {
@@ -157,7 +179,7 @@ public final class Point3d implements Serializable {
     	return this.x*other.x + this.y*other.y + this.z*other.z;
     }
 
-    public Point3d cross(final Point3d a, float s)
+    public Point3d cross(final Point3d a, double s)
     {
     	this.x = a.x*s;
     	this.y = a.y*s;
@@ -234,10 +256,10 @@ public final class Point3d implements Serializable {
     }    
 
     /*
-    public void rotateToDirection (float pitch, float azimuth) {
-    	this.x =  (float)(-Math.sin(Math.toRadians(azimuth)) * Math.cos(Math.toRadians(pitch)));
-    	this.y = (float)(Math.sin(Math.toRadians(pitch)));
-    	this.z = (float)(Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(azimuth)));	
+    public void rotateToDirection (double pitch, double azimuth) {
+    	this.x = -Math.sin(Math.toRadians(azimuth)) * Math.cos(Math.toRadians(pitch));
+    	this.y = Math.sin(Math.toRadians(pitch));
+    	this.z = Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(azimuth));	
     }    
     */
 }

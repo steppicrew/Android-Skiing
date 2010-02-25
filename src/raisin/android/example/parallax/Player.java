@@ -40,7 +40,7 @@ class Player extends Sprite {
 	
 	Player( GameRuntime.Stage stageData ) {
 		super(stageData);
-		coord= new Point3d(-1, 190, 100);
+		coord= new Point3d(-1, 190, 40);
 	}
 
 	@Override
