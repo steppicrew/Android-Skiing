@@ -67,7 +67,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
 		if ( hotspot == null || dimension == null ) return;
 		
-		double scaleBy= mStageData.pointOfView.z - coord.z;
+		double scaleBy= mStageData.pointOfView.z - coord.z - ofs.z;
 		scaleBy= Math.max(scaleBy / 10, 1);
 //		Point3d pointOfView= new Point3d(mStageData.origin);
 //		pointOfView.z= mStageData.pointOfView.z;
