@@ -10,6 +10,8 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public final class Point3d implements Serializable {
 
+	public static final Point3d Zero= new Point3d(0, 0, 0);
+	
     public double x;
     public double y;
     public double z;
@@ -223,6 +225,13 @@ public final class Point3d implements Serializable {
     	this.x += other.x;
     	this.y += other.y;
     	this.z += other.z;
+    	return this;
+    }
+    
+    public Point3d addXYZ( double x, double y, double z ) {
+    	this.x += x;
+    	this.y += y;
+    	this.z += z;
     	return this;
     }
     

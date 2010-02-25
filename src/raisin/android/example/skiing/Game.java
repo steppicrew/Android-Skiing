@@ -532,7 +532,6 @@ public final class Game extends GameRuntime implements SensorEventListener, Seri
     	if ( gameState == GameState.PAUSE ) {
     		canvas.drawText("PAUSED", mStageData.mCanvasWidth / 2, mStageData.mCanvasHeight / 2, mStatusTextPaint);
     	}
-    
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.util.List;
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameTime;
 import raisin.android.engine.R;
+import raisin.android.example.skiing.Game.GameState;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -106,7 +107,6 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         accel= 0;
         fspeed= 0;
     	rebuildSpriteList= true;
-    	gameState= GameRuntime.GameState.RUNNING;
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -212,7 +212,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 
         mStage.origin.y += elapsed * fspeed;
         player.coord.y += elapsed * fspeed;
-	        
+
+        player.update(gameState);
+        
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
 
         if ( mNextTreeTime.runOut() ) {
@@ -294,6 +296,10 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	canvas.drawText("" + (int)(score), 40, 60, mScoreTextPaint);
     	canvas.drawText("" + lifes + " to go", GameRuntime.mCanvasWidth - 40, 60, mHitsTextPaint);
 
+    	if ( gameState == GameState.INTRO ) {
+    		canvas.drawText("PLAY!", GameRuntime.mCanvasWidth / 2, GameRuntime.mCanvasHeight / 2, mStatusTextPaint);
+    	}
+
     	if ( gameState == GameRuntime.GameState.PAUSE ) {
     		canvas.drawText("PAUSED", GameRuntime.mCanvasWidth / 2, GameRuntime.mCanvasHeight / 2, mStatusTextPaint);
     	}
@@ -305,7 +311,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         fixContent();
         if ( gameState == GameRuntime.GameState.RUNNING ) update();
     	draw(canvas);
-    	return gameState == GameRuntime.GameState.PAUSE;
+
+    	return gameState == GameRuntime.GameState.INTRO
+    	 	|| gameState == GameRuntime.GameState.PAUSE;
     }
 
 	@Override
@@ -335,6 +343,12 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
     }
 
+    public void skipToNextState() {
+		if ( gameState == GameRuntime.GameState.INTRO ) setState(GameRuntime.GameState.RUNNING);
+		else if ( gameState == GameRuntime.GameState.RUNNING ) setState(GameRuntime.GameState.PAUSE);
+		else if ( gameState == GameRuntime.GameState.PAUSE ) setState(GameRuntime.GameState.RUNNING);
+    }
+    
     private boolean pauseKeyPressed;
     
     @Override
@@ -370,10 +384,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 						
 					case KeyEvent.KEYCODE_P:
 					case KeyEvent.KEYCODE_SPACE:
-						if ( !pauseKeyPressed ) {
-							if ( gameState == GameRuntime.GameState.RUNNING ) setState(GameRuntime.GameState.PAUSE);
-							else if ( gameState == GameRuntime.GameState.PAUSE ) setState(GameRuntime.GameState.RUNNING);
-						}
+						if ( !pauseKeyPressed ) skipToNextState();
 						pauseKeyPressed= true;
 						return true;
 				}

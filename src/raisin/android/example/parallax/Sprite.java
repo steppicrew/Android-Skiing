@@ -4,14 +4,11 @@
 package raisin.android.example.parallax;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
 
 import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
 @SuppressWarnings("serial")
@@ -45,6 +42,10 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		return zDiff;
 	}
 
+	public void update( GameRuntime.GameState state ) {
+		// Empty
+	}
+
 	public abstract void draw( Canvas canvas );
 
 //	private static class SizedDrawable {
@@ -71,7 +72,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
 		if ( hotspot == null || dimension == null ) return;
 		
-		double scaleBy= mStageData.pointOfView.z - coord.z;
+		double scaleBy= mStageData.pointOfView.z - coord.z - ofs.z;
 		scaleBy= Math.max(scaleBy / 10, 1);
 //		Point3d pointOfView= new Point3d(mStageData.origin);
 //		pointOfView.z= mStageData.pointOfView.z;
