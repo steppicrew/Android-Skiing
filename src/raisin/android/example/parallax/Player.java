@@ -44,7 +44,7 @@ class Player extends Sprite {
 	}
 
 	private void fixWH() {
-		if ( dimension != null ) return;
+		if ( dimension != null || mDriveImage == null ) return;
 
 		dimension= new Point3d(
 		    	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
@@ -64,11 +64,9 @@ class Player extends Sprite {
 	}
 
 	@Override
-	public void update( GameRuntime.GameState state ) {
-	}
-
-	@Override
 	public void draw( Canvas canvas ) {
+		fixWH();
+
 		Point3d origin= new Point3d(0, 0, 0);
         if ( crash ) {
         	drawDrawable(canvas, mCrashImage, origin);

@@ -114,8 +114,8 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	out.writeInt(lifes);
     	out.writeDouble(mStage.origin.y);
     	out.writeDouble(score);
-    	out.writeLong(mNextTreeTime.getOffset());
-    	out.writeLong(mCrashUntilTime.getOffset());
+    	mNextTreeTime.writeToStream(out);
+    	mCrashUntilTime.writeToStream(out);
     	out.writeFloat(accel);
     	out.writeFloat(fspeed);
     	out.writeObject(player);
@@ -124,11 +124,10 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-
         restart();
     	gameState= GameRuntime.GameState.values()[in.readInt()];
     	lifes= in.readInt();
-    	mStage.origin.y= in.readFloat();
+    	mStage.origin.y= in.readDouble();
     	score= in.readDouble();
         mNextTreeTime.readFromStream(in);
         mCrashUntilTime.readFromStream(in);

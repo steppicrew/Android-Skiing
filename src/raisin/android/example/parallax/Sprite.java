@@ -41,10 +41,11 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		return zDiff;
 	}
 
-	public abstract void update( GameRuntime.GameState state );
 	public abstract void draw( Canvas canvas );
 
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
+		if ( hotspot == null || dimension == null ) return;
+		
 		Point3d upperLeftBack= new Point3d(coord)
 			.sub(hotspot)
 			.sub(ofs)

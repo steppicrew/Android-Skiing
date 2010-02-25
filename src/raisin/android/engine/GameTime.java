@@ -4,10 +4,12 @@
 package raisin.android.engine;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameTime {
+@SuppressWarnings("serial")
+public class GameTime implements Serializable {
 	
 	public static GameTime master= new GameTime(true);
 	public static List<GameTime> instances= new ArrayList<GameTime>();
@@ -51,15 +53,19 @@ public class GameTime {
 
 	@SuppressWarnings("unused")
 	private transient boolean isMaster;
-	private transient long mLastTime;
+	private long mLastTime;
 
 	private GameTime( boolean isMaster ) {
 		this.isMaster= isMaster;
 	}
 
+    public void writeToStream(java.io.ObjectOutputStream out) throws IOException {
+    	out.writeLong(mLastTime);
+    }
+
     public void readFromStream(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-    	GameTime instance= (GameTime) in.readObject();
-    	mLastTime= master.mLastTime + instance.mLastTime;
+    	long savedTime= in.readLong();
+    	mLastTime= master.mLastTime + savedTime;
     }
 
 	public void setOffset( long offset ) {

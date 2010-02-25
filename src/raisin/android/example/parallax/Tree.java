@@ -50,10 +50,6 @@ class Tree extends Sprite {
 	}
 
 	@Override
-	public void update( GameRuntime.GameState state ) {
-	}
-
-	@Override
 	public void draw( Canvas canvas ) {
 		drawDrawable(canvas, mTreeImages[type], new Point3d(0, 0, 0));
 	}
