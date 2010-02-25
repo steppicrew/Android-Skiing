@@ -16,7 +16,7 @@ import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 public class GameView extends SurfaceView
-	implements SurfaceHolder.Callback, OnKeyListener, OnTouchListener
+	implements SurfaceHolder.Callback, OnTouchListener
 {
 
 	private final class GameThread extends Thread {
@@ -156,7 +156,6 @@ public class GameView extends SurfaceView
             }
         });
         
-        setOnKeyListener(this);
         setOnTouchListener(this);
         
         GameRuntime.thaw(mContext);
@@ -188,10 +187,19 @@ public class GameView extends SurfaceView
 	}
 
 	@Override
-	public boolean onKey(View v, int keyCode, KeyEvent event) {
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		Log.e("Key", "Thread running: " + thread.isRunning());
 		if ( thread.isRunning() ) {
-			return thread.handleKeyEvent(v, keyCode, event);
+			return thread.handleKeyEvent(this, keyCode, event);
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		Log.e("Key", "Thread running: " + thread.isRunning());
+		if ( thread.isRunning() ) {
+			return thread.handleKeyEvent(this, keyCode, event);
 		}
 		return false;
 	}
