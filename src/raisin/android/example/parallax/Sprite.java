@@ -4,13 +4,10 @@
 package raisin.android.example.parallax;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
 
 import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
 @SuppressWarnings("serial")

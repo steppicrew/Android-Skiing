@@ -103,7 +103,9 @@ public class GameRuntime implements Serializable {
 	    		break;
 
 	    	case RUNNING:
-	    		if ( gameState == GameRuntime.GameState.PAUSE ) {
+	    		if ( gameState == GameRuntime.GameState.INTRO
+		    		 || gameState == GameRuntime.GameState.PAUSE )
+	    		{
 	    			gameState= state;
 	    			break;
 	    		}
@@ -113,7 +115,7 @@ public class GameRuntime implements Serializable {
     }
     
     public void restart() {
-    	// Empty
+    	gameState= GameRuntime.GameState.INTRO;
     }
     
     public void destroy() {
