@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
+import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.graphics.Canvas;
@@ -63,6 +64,10 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 //	// Erst mal ausserhalb von SizedDrawable
 //	private static final HashMap<Integer, SizedDrawable> drawableCache= new HashMap<Integer, SizedDrawable>();
 
+	public Cube scaleBy(double factor) {
+		return Cube.CubeByHotspot(hotspot, dimension).scaleBy(factor);
+	}
+	
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
 		if ( hotspot == null || dimension == null ) return;
 		
