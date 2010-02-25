@@ -5,6 +5,7 @@ package raisin.android.example.parallax;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.R;
+import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -44,6 +45,10 @@ class Player extends Sprite {
 	Player( GameRuntime.Stage stageData ) {
 		super(stageData);
 		coord= new Point3d(-1, 190, 40);
+		dimension= Cube.CubeByHotspotDimension(
+			new Point3d(25, 15, 0), // hotspot
+			new Point3d(50, 30, 180) // dimension
+		);
 	}
 
 	@Override
@@ -67,12 +72,16 @@ class Player extends Sprite {
 	}
 
 	private void fixWH() {
-		if ( dimension != null || mDriveImage == null ) return;
+		if ( imageWHD != null || mDriveImage == null ) return;
 
-		dimension= new Point3d(
+		imageWHD= new Point3d(
 		    	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
 		);
-		hotspot= new Point3d(dimension.x / 2, dimension.y - 8, 5);
+		imageScale= new Point3d(
+			imageWHD.x / Math.max(dimension.width(), 1),
+			imageWHD.y / Math.max(dimension.height(), 1),
+			imageWHD.z / Math.max(dimension.depth(), 1)
+		);
 	}
 
 	@Override
@@ -87,9 +96,9 @@ class Player extends Sprite {
 		if ( coord.x < 0 ) coord.x= GameRuntime.mCanvasWidth / 2;
 
         coord.x += diffx;
-        if ( coord.x < hotspot.x ) coord.x= hotspot.x;
-        if ( coord.x > GameRuntime.mCanvasWidth - dimension.x + hotspot.x ) {
-        	coord.x= GameRuntime.mCanvasWidth - dimension.x + hotspot.x;
+        if ( coord.x + dimension.upperLeftBack.x < 0 ) coord.x= -dimension.upperLeftBack.x;
+        if ( coord.x + dimension.lowerRightFront.x > GameRuntime.mCanvasWidth ) {
+        	coord.x= GameRuntime.mCanvasWidth - dimension.lowerRightFront.x;
         }
 	}
 

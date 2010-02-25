@@ -16,15 +16,20 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 	// Unserializable
 	protected transient GameRuntime.Stage mStageData;
-	
-	protected transient Point3d dimension;
-	protected transient Point3d hotspot;
+	protected transient Point3d imageWHD;
+	protected transient Point3d imageScale;
 	
 	// Serializable
 	protected Point3d coord;
+	protected Cube dimension;
 
 	Sprite( GameRuntime.Stage stageData ) {
 		init(stageData);
+	}
+
+	Sprite( GameRuntime.Stage stageData, Point3d hotspot, Point3d widthHeightDepth ) {
+		init(stageData);
+		dimension= Cube.CubeByHotspotDimension(hotspot, widthHeightDepth);
 	}
 
 	public void init( GameRuntime.Stage stageData ) {
@@ -65,30 +70,23 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 //	// Erst mal ausserhalb von SizedDrawable
 //	private static final HashMap<Integer, SizedDrawable> drawableCache= new HashMap<Integer, SizedDrawable>();
 
-	public Cube scaleBy(double factor) {
-		return Cube.CubeByHotspot(hotspot, dimension).scaleBy(factor);
-	}
-	
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
-		if ( hotspot == null || dimension == null ) return;
+		if ( dimension == null ) return;
 		
-		double scaleBy= mStageData.pointOfView.z - coord.z - ofs.z;
-		scaleBy= Math.max(scaleBy / 10, 1);
 //		Point3d pointOfView= new Point3d(mStageData.origin);
 //		pointOfView.z= mStageData.pointOfView.z;
-//		double scaleBy= pointOfView.sub(coord).length();
-		scaleBy= 1 / scaleBy;
-		//		scaleBy= .5d;
-		
-		Point3d upperLeftBack= new Point3d(hotspot).inverse().scaleSelf(scaleBy)
-			.add(coord)
-			.sub(ofs)
-			.sub(mStageData.origin)
-		;
-		Point3d lowerRightFront= new Point3d(dimension).scaleSelf(scaleBy)
-			.add(upperLeftBack)
-		;
+//		double factor= pointOfView.sub(coord).length();
 
+//		double factor= mStageData.pointOfView.z / (mStageData.pointOfView.z - (coord.z + ofs.z));
+		
+		double projection= GameRuntime.mCanvasWidth / mStageData.slopeWidth;
+		
+		Cube cube= (new Cube(dimension))
+			.add(coord).sub(ofs).sub(mStageData.origin)
+//			.scaleBy(factor)
+			.scaleBy(projection, projection, 0)
+		;
+		
 //		int width= lowerRightFront.intX() - upperLeftBack.intX();
 //		int height= upperLeftBack.intY() - lowerRightFront.intY();
 //		
@@ -100,8 +98,8 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		
 		// TODO: calculate bounds from all three coordinates
 		drawable.setBounds(
-				upperLeftBack.intX(), upperLeftBack.intY(),
-				lowerRightFront.intX(), lowerRightFront.intY()
+				cube.upperLeftBack.intX(), cube.upperLeftBack.intY(),
+				cube.lowerRightFront.intX(), cube.lowerRightFront.intY()
 		);
 		drawable.draw(canvas);
 	}

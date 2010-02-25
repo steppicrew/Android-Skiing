@@ -73,20 +73,17 @@ public final class Point3d implements Serializable {
     /**
      * get a vector by scaling
      */
-    public Point3d scaleVector(double scaler) {
+    public Point3d scaleBy(double scaler) {
         x *= scaler;
         y *= scaler;
         z *= scaler;
         return this;
     }
-
-    /**
-     * get a vector by scaling
-     */
-    public Point3d scaleSelf(double scaler) {
-        x *= scaler;
-        y *= scaler;
-        z *= scaler;
+    
+    public Point3d scaleBy(double x, double y, double z) {
+        this.x *= x;
+        this.y *= y;
+        this.z *= z;
         return this;
     }
     

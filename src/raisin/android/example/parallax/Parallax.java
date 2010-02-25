@@ -32,7 +32,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 
 	private static final int MAX_TREES= 8;
 
-	private final static int speed= 300;
+	private final static int speed= 30;
 
 	// Serializable
 	private int lifes;
@@ -223,7 +223,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
             Iterator<Tree> it = mTrees.iterator();
             while ( it.hasNext() ){
             	Tree tree= it.next();
-            	if ( tree.coord.y < mStage.origin.y - tree.dimension.y ) {
+            	if ( tree.coord.y < mStage.origin.y - tree.dimension.lowerRightFront.y ) {
             		sprites.remove(tree);
             		it.remove();
             		// rebuildSpriteList= true;
@@ -250,11 +250,11 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     	if ( crashing() ) return true;
 
     	for ( Tree tree: mTrees ) {
-    		int treeLeft= (int)(tree.coord.x - tree.dimension.x / 4);
-    		int treeRight= (int)(tree.coord.x + tree.dimension.x / 4);
+    		int treeLeft= (int)(tree.coord.x - tree.dimension.upperLeftBack.x / 4);
+    		int treeRight= (int)(tree.coord.x + tree.dimension.lowerRightFront.x / 4);
 
-    		int playerLeft= (int)(player.coord.x - player.dimension.x / 3);
-    		int playerRight= (int)(player.coord.x + player.dimension.x / 3);
+    		int playerLeft= (int)(player.coord.x - player.dimension.upperLeftBack.x / 3);
+    		int playerRight= (int)(player.coord.x + player.dimension.lowerRightFront.x / 3);
 
     		if ( playerRight < treeLeft || playerLeft > treeRight ) continue;
 

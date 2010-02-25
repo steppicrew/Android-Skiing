@@ -28,7 +28,8 @@ public class GameRuntime implements Serializable {
 
 	public static class Stage {
 		public Point3d origin= new Point3d();
-		public Point3d pointOfView= new Point3d(0, 0, 40);
+		public Point3d pointOfView= new Point3d(0, 0, 200);
+		public double slopeWidth= 200; // 20m
 	}
 
 	public static Random random= new Random();
