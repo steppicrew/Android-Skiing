@@ -28,13 +28,14 @@ public class GameRuntime implements Serializable {
 
 	public static class Stage {
 		public Point3d origin= new Point3d();
+		public Point3d pointOfView= new Point3d(0, 0, 40);
 	}
 
 	public static Random random= new Random();
 
 	public static transient int mCanvasHeight = 1;
 	public static transient int mCanvasWidth = 1;
-
+	
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
 	private static GameRuntime instance;

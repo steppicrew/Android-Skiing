@@ -45,7 +45,7 @@ class Tree extends Sprite {
 		coord= new Point3d(
 				GameRuntime.random.nextDouble() * (GameRuntime.mCanvasWidth + dimension.x + hotspot.x),
 				mStageData.origin.y + GameRuntime.mCanvasHeight + hotspot.y,
-				50
+				20
 		);
 	}
 

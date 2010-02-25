@@ -50,27 +50,27 @@ public class SinCosTable {
 	/**
 	 * Calculates sine for the passed angle in radians.
 	 * 
-	 * @param theta
+	 * @param angle
 	 * @return sine value for theta
 	 */
-	public static final double sin(float theta) {
-		while (theta < 0) {
-			theta += GameMath.TWO_PI;
+	public static final double sin(double angle) {
+		while (angle < 0) {
+			angle += GameMath.TWO_PI;
 		}
-		return sinLUT[(int) (theta * RAD_TO_DEG) % SC_PERIOD];
+		return sinLUT[(int) (angle * RAD_TO_DEG) % SC_PERIOD];
 	}
 
 	/**
 	 * Calculate cosine for the passed in angle in radians.
 	 * 
-	 * @param theta
+	 * @param angle
 	 * @return cosine value for theta
 	 */
-	public static final double cos(float theta) {
-		while (theta < 0) {
-			theta += GameMath.TWO_PI;
+	public static final double cos(double angle) {
+		while (angle < 0) {
+			angle += GameMath.TWO_PI;
 		}
-		return cosLUT[(int) (theta * RAD_TO_DEG) % SC_PERIOD];
+		return cosLUT[(int) (angle * RAD_TO_DEG) % SC_PERIOD];
 	}
 	
 }
