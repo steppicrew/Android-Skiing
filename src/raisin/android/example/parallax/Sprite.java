@@ -4,10 +4,13 @@
 package raisin.android.example.parallax;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
 
 import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 
 @SuppressWarnings("serial")
@@ -43,6 +46,23 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 	public abstract void draw( Canvas canvas );
 
+//	private static class SizedDrawable {
+//		
+//		public int width;
+//		public int height;
+//		
+//		public Drawable cached;
+//
+//		public void set( Drawable in, int width, int height ) {
+//			// cached= in.createScaledBitmap(drawable, width, height, true);
+//			this.width= width;
+//			this.height= height;
+//		}
+//	}
+	
+//	// Erst mal ausserhalb von SizedDrawable
+//	private static final HashMap<Integer, SizedDrawable> drawableCache= new HashMap<Integer, SizedDrawable>();
+
 	protected void drawDrawable( Canvas canvas, Drawable drawable, Point3d ofs ) {
 		if ( hotspot == null || dimension == null ) return;
 		
@@ -63,6 +83,15 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 			.add(upperLeftBack)
 		;
 
+//		int width= lowerRightFront.intX() - upperLeftBack.intX();
+//		int height= upperLeftBack.intY() - lowerRightFront.intY();
+//		
+//		SizedDrawable image= drawableCache.get(drawable.hashCode());
+//		if ( image == null || image.width != width || image.height != height ) {
+//		 	if ( image == null ) image= new SizedDrawable();
+//		 	image.set(drawable, width, height);
+//		}
+		
 		// TODO: calculate bounds from all three coordinates
 		drawable.setBounds(
 				upperLeftBack.intX(), upperLeftBack.intY(),
