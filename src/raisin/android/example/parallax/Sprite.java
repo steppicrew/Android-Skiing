@@ -41,6 +41,10 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		return zDiff;
 	}
 
+	public void update( GameRuntime.GameState state ) {
+		// Empty
+	}
+
 	public abstract void draw( Canvas canvas );
 
 //	private static class SizedDrawable {

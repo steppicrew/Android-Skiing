@@ -204,6 +204,13 @@ public final class Point3d implements Serializable {
     	return this;
     }
     
+    public Point3d addXYZ( double x, double y, double z ) {
+    	this.x += x;
+    	this.y += y;
+    	this.z += z;
+    	return this;
+    }
+    
     public final Point3d sub(final Point3d other) {
     	this.x -= other.x;
     	this.y -= other.y;

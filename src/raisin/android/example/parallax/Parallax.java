@@ -212,7 +212,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
 
         mStage.origin.y += elapsed * fspeed;
         player.coord.y += elapsed * fspeed;
-	        
+
+        player.update(gameState);
+        
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
 
         if ( mNextTreeTime.runOut() ) {
