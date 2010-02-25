@@ -79,7 +79,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 			.sub(ofs)
 			.sub(mStageData.origin)
 		;
-		Point3d lowerRightFront= new Point3d(dimension).scaleSelf(scaleBy).max(5, 5, 5)
+		Point3d lowerRightFront= new Point3d(dimension).scaleSelf(scaleBy)
 			.add(upperLeftBack)
 		;
 
