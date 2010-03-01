@@ -57,4 +57,11 @@ public class Cube {
 		lowerRightFront.scaleBy(x, y, z);
 		return this;
 	}
+	
+	public boolean overlaps(Cube other) {
+		return !(lowerRightFront.x < other.upperLeftBack.x || upperLeftBack.x > other.lowerRightFront.x
+			|| lowerRightFront.y < other.upperLeftBack.y || upperLeftBack.y > other.lowerRightFront.y
+			|| lowerRightFront.z < other.upperLeftBack.z || upperLeftBack.z > other.lowerRightFront.z
+		);
+	}
 }

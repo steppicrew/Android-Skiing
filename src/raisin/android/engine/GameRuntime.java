@@ -28,8 +28,17 @@ public class GameRuntime implements Serializable {
 
 	public static class Stage {
 		public Point3d origin= new Point3d();
-		public Point3d pointOfView= new Point3d(0, 0, 200);
-		public double slopeWidth= 200; // 20m
+		public final double slopeWidth= 200; // 20m
+		public Point3d pointOfView= new Point3d(slopeWidth / 2, 0, 100);
+		public double getSlopeHeight(int width, int height) {
+			return slopeWidth / width * height;
+		}
+		public double getSlopeHeight(Canvas canvas) {
+			return getSlopeHeight(canvas.getWidth(), canvas.getHeight());
+		}
+		public double getProjection(Canvas canvas) {
+			return canvas.getWidth() / slopeWidth;
+		}
 	}
 
 	public static Random random= new Random();

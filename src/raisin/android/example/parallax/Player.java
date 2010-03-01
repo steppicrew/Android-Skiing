@@ -44,11 +44,12 @@ class Player extends Sprite {
 	
 	Player( GameRuntime.Stage stageData ) {
 		super(stageData);
-		coord= new Point3d(-1, 190, 40);
+		coord= new Point3d(-1, 50, 0);
 		dimension= Cube.CubeByHotspotDimension(
 			new Point3d(25, 15, 0), // hotspot
 			new Point3d(50, 30, 180) // dimension
 		);
+		hotCube= (new Cube(dimension)).scaleBy(0.25d, 0.25d, 1);
 	}
 
 	@Override
@@ -87,18 +88,18 @@ class Player extends Sprite {
 	@Override
 	public void update( GameRuntime.GameState state ) {
 		if ( state == GameRuntime.GameState.RUNNING ) {
-			playerJudderIndex= playerJudderIndex + 1 >= playerJudder.length ? 0 : playerJudderIndex + 1;
+			playerJudderIndex= ++playerJudderIndex % playerJudder.length;
 		}
 	}
 
 	public void addX(double diffx) {
 		fixWH();
-		if ( coord.x < 0 ) coord.x= GameRuntime.mCanvasWidth / 2;
+		if ( coord.x < 0 ) coord.x= mStageData.slopeWidth / 2;
 
         coord.x += diffx;
         if ( coord.x + dimension.upperLeftBack.x < 0 ) coord.x= -dimension.upperLeftBack.x;
-        if ( coord.x + dimension.lowerRightFront.x > GameRuntime.mCanvasWidth ) {
-        	coord.x= GameRuntime.mCanvasWidth - dimension.lowerRightFront.x;
+        if ( coord.x + dimension.lowerRightFront.x > mStageData.slopeWidth ) {
+        	coord.x= mStageData.slopeWidth - dimension.lowerRightFront.x;
         }
 	}
 
@@ -112,7 +113,7 @@ class Player extends Sprite {
         }
 
     	shadowOfs.y= -playerJudder[playerJudderIndex];
-    	playerOfs.z=  20 * playerJudder[playerJudderIndex];
+    	playerOfs.z=  2 * playerJudder[playerJudderIndex];
         
         drawDrawable(canvas, mShadowImage, shadowOfs);
     	drawDrawable(canvas, mDriveImage, playerOfs);

@@ -22,6 +22,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	// Serializable
 	protected Point3d coord;
 	protected Cube dimension;
+	protected Cube hotCube;
 
 	Sprite( GameRuntime.Stage stageData ) {
 		init(stageData);
@@ -77,13 +78,16 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 //		pointOfView.z= mStageData.pointOfView.z;
 //		double factor= pointOfView.sub(coord).length();
 
-//		double factor= mStageData.pointOfView.z / (mStageData.pointOfView.z - (coord.z + ofs.z));
+		double z= coord.z + ofs.z;
+		if (z < 0) return; // do not draw anything if under ground
+		if (z > mStageData.pointOfView.z + 10) return; // do not draw anything if too near
+		double factor= mStageData.pointOfView.z / (mStageData.pointOfView.z - z);
 		
-		double projection= GameRuntime.mCanvasWidth / mStageData.slopeWidth;
+		double projection= mStageData.getProjection(canvas);
 		
 		Cube cube= (new Cube(dimension))
 			.add(coord).sub(ofs).sub(mStageData.origin)
-//			.scaleBy(factor)
+			.sub(mStageData.pointOfView).scaleBy(factor).add(mStageData.pointOfView)
 			.scaleBy(projection, projection, 0)
 		;
 		

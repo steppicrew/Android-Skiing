@@ -10,6 +10,7 @@ import java.util.List;
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameTime;
 import raisin.android.engine.R;
+import raisin.android.engine.math.Cube;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -248,20 +249,11 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     private boolean crashed() {
     	if ( crashing() ) return true;
 
-    	for ( Tree tree: mTrees ) {
-    		int treeLeft= (int)(tree.coord.x - tree.dimension.upperLeftBack.x / 4);
-    		int treeRight= (int)(tree.coord.x + tree.dimension.lowerRightFront.x / 4);
+		Cube playerHot= (new Cube(player.hotCube)).add(player.coord);
 
-    		int playerLeft= (int)(player.coord.x - player.dimension.upperLeftBack.x / 3);
-    		int playerRight= (int)(player.coord.x + player.dimension.lowerRightFront.x / 3);
-
-    		if ( playerRight < treeLeft || playerLeft > treeRight ) continue;
-
-    		int py= (int)player.coord.y;
-    		int treeTop= (int)tree.coord.y - 10;
-    		int treeBottom= (int)tree.coord.y + 7;
-
-    		if ( py < treeTop || py > treeBottom ) continue;
+		for ( Tree tree: mTrees ) {
+    		Cube treeHot= (new Cube(tree.hotCube)).add(tree.coord);
+    		if (!playerHot.overlaps(treeHot)) continue;
 
     		mCrashUntilTime.setOffset(1500);
     		if ( lifes > 0 ) lifes--;

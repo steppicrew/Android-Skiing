@@ -41,13 +41,16 @@ class Tree extends Sprite {
 			new Point3d(100, 25, 0), // hotspot
 			new Point3d(200, 50, 200) // dimension
 		);
+		hotCube= (new Cube(dimension)).scaleBy(0.25d, 0.25d, 1);
 	}
 	
 	void randomize() {
     	type= GameRuntime.random.nextInt(TREE_TYPES);
 		coord= new Point3d(
 				GameRuntime.random.nextDouble() * mStageData.slopeWidth,
-				mStageData.origin.y + 200,
+				mStageData.origin.y
+					+ mStageData.getSlopeHeight(GameRuntime.mCanvasWidth, GameRuntime.mCanvasHeight)
+					+ dimension.height(),
 				0
 		);
 	}
