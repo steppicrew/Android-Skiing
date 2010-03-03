@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionCode="1"
-      android:versionName="1.0" package="raisin.android.engine">
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
-        <activity android:name=".GameActivity"
-                   android:label="@string/app_name">
+      android:versionName="1.0" package="raisin.android">
+
+    <application
+            android:name="MainApplication"
+            android:icon="@drawable/icon"
+            android:label="@string/app_name"
+            android:debuggable="true">
+            
+        <activity android:name="MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- Activity Samples -->
+
+        <activity android:name=".engine.GameActivity"
+                   android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.TEST" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".app.HelloWorld" android:label="@string/activity_hello_world">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.TEST" />
+            </intent-filter>
+        </activity>
+
     </application>
+
     <uses-sdk android:targetSdkVersion="7" android:minSdkVersion="6"/>
 
 </manifest> 

@@ -4,7 +4,7 @@
 package raisin.android.example.parallax2;
 
 import raisin.android.engine.GameRuntime;
-import raisin.android.engine.R;
+import raisin.android.R;
 import raisin.android.engine.math.Point3d;
 import android.content.Context;
 import android.graphics.Canvas;

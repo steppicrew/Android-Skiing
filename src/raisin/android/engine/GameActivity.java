@@ -1,6 +1,6 @@
 package raisin.android.engine;
 
-import raisin.android.engine.R;
+import raisin.android.R;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;

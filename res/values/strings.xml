@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">_Skiing</string>
+    <string name="app_name">_RaisinAndroid</string>
+
+    <!--  Applets -->
+
+    <string name="activity_hello_world"><b>Hello <i>World</i></b></string>
+    <string name="hello_world"><b>Hello, <i>Steppi-World!</i></b></string>
+
 </resources>

@@ -9,7 +9,7 @@ import java.util.List;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameTime;
-import raisin.android.engine.R;
+import raisin.android.R;
 import raisin.android.example.skiing.Game.GameState;
 
 import android.content.Context;

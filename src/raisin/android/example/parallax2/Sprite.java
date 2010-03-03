@@ -75,12 +75,12 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		scaleBy= 1 / scaleBy;
 		//		scaleBy= .5d;
 		
-		Point3d upperLeftBack= new Point3d(hotspot).inverse().scaleSelf(scaleBy)
+		Point3d upperLeftBack= new Point3d(hotspot).inverse().scaleBy(scaleBy)
 			.add(coord)
 			.sub(ofs)
 			.sub(mStageData.origin)
 		;
-		Point3d lowerRightFront= new Point3d(dimension).scaleSelf(scaleBy)
+		Point3d lowerRightFront= new Point3d(dimension).scaleBy(scaleBy)
 			.add(upperLeftBack)
 		;
 
