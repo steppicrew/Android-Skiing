@@ -19,7 +19,7 @@ class Tree extends Sprite {
 	// Serializable
 	private int type;
 
-	Tree( GameRuntime.Stage stageData ) {
+	Tree( GameRuntime.StageData stageData ) {
 		super(stageData);
 	}
 
@@ -35,7 +35,7 @@ class Tree extends Sprite {
 	}
 	
 	@Override
-	public void init( GameRuntime.Stage stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
 		dimension= Cube.CubeByHotspotDimension(
 			new Point3d(100, 25, 0), // hotspot
@@ -47,10 +47,10 @@ class Tree extends Sprite {
 	void randomize() {
     	type= GameRuntime.random.nextInt(TREE_TYPES);
 		coord= new Point3d(
-				GameRuntime.random.nextDouble() * mStageData.slopeWidth,
+				GameRuntime.random.nextDouble() * mStageData.getSlopeWidth(),
 				mStageData.origin.y
-					+ mStageData.getSlopeHeight(GameRuntime.mCanvasWidth, GameRuntime.mCanvasHeight)
-					+ dimension.height(),
+					+ mStageData.getSlopeHeight()
+					+ dimension.dY(),
 				0
 		);
 	}

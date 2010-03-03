@@ -1,6 +1,9 @@
 package raisin.android.engine.math;
 
-public class Cube {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Cube implements Serializable {
 	public Point3d upperLeftBack;
 	public Point3d lowerRightFront;
 	
@@ -22,16 +25,16 @@ public class Cube {
 		);
 	}
 	
-	public double width() {
-		return upperLeftBack.x - lowerRightFront.x;
+	public double dX() {
+		return lowerRightFront.x - upperLeftBack.x;
 	}
 	
-	public double height() {
-		return upperLeftBack.y - lowerRightFront.y;
+	public double dY() {
+		return lowerRightFront.y - upperLeftBack.y;
 	}
 	
-	public double depth() {
-		return lowerRightFront.z - upperLeftBack.z;
+	public double dZ() {
+		return upperLeftBack.z - lowerRightFront.z;
 	}
 	
 	public Cube add(Point3d offset) {
