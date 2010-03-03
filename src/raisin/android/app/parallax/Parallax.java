@@ -1,4 +1,4 @@
-package raisin.android.example.parallax;
+package raisin.android.app.parallax;
 
 import java.io.IOException;
 import java.io.Serializable;

@@ -63,7 +63,7 @@ public class GameRuntime implements Serializable {
 
 	static public GameRuntime instance( Context context ) {
 		if ( instance == null ) {
-			instance= new raisin.android.example.parallax.Parallax();
+			instance= new raisin.android.app.parallax.Parallax();
 			instance.init(context);
 		}
 		return instance;

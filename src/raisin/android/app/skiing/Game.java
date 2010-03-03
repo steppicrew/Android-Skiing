@@ -1,4 +1,4 @@
-package raisin.android.example.skiing;
+package raisin.android.app.skiing;
 
 import java.io.IOException;
 import java.io.Serializable;

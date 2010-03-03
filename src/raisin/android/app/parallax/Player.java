@@ -1,10 +1,11 @@
 /**
  * 
  */
-package raisin.android.example.parallax2;
+package raisin.android.app.parallax;
 
 import raisin.android.engine.GameRuntime;
 import raisin.android.R;
+import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -41,13 +42,18 @@ class Player extends Sprite {
 	// Serializable
 	private boolean crash;
 	
-	Player( GameRuntime.Stage stageData ) {
+	Player( GameRuntime.StageData stageData ) {
 		super(stageData);
-		coord= new Point3d(-1, 190, 40);
+		coord= new Point3d(-1, 50, 0);
+		dimension= Cube.CubeByHotspotDimension(
+			new Point3d(25, 15, 0), // hotspot
+			new Point3d(50, 30, 180) // dimension
+		);
+		hotCube= (new Cube(dimension)).scaleBy(0.25d, 0.25d, 1);
 	}
 
 	@Override
-	public void init( GameRuntime.Stage stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
 		shadowOfs= new Point3d(0, 0, 0);
 		playerOfs= new Point3d(0, 0, 0);
@@ -67,29 +73,34 @@ class Player extends Sprite {
 	}
 
 	private void fixWH() {
-		if ( dimension != null || mDriveImage == null ) return;
+		if ( imageWHD != null || mDriveImage == null ) return;
 
-		dimension= new Point3d(
+		imageWHD= new Point3d(
 		    	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
 		);
-		hotspot= new Point3d(dimension.x / 2, dimension.y - 8, 5);
+		imageScale= new Point3d(
+			imageWHD.x / Math.max(dimension.dX(), 1),
+			imageWHD.y / Math.max(dimension.dY(), 1),
+			imageWHD.z / Math.max(dimension.dZ(), 1)
+		);
 	}
 
 	@Override
 	public void update( GameRuntime.GameState state ) {
 		if ( state == GameRuntime.GameState.RUNNING ) {
-			playerJudderIndex= playerJudderIndex + 1 >= playerJudder.length ? 0 : playerJudderIndex + 1;
+			playerJudderIndex= ++playerJudderIndex % playerJudder.length;
 		}
 	}
 
 	public void addX(double diffx) {
 		fixWH();
-		if ( coord.x < 0 ) coord.x= GameRuntime.mCanvasWidth / 2;
+		double slopeWidth= mStageData.getSlopeWidth();
+		if ( coord.x < 0 ) coord.x= slopeWidth / 2;
 
         coord.x += diffx;
-        if ( coord.x < hotspot.x ) coord.x= hotspot.x;
-        if ( coord.x > GameRuntime.mCanvasWidth - dimension.x + hotspot.x ) {
-        	coord.x= GameRuntime.mCanvasWidth - dimension.x + hotspot.x;
+        if ( coord.x + dimension.upperLeftBack.x < 0 ) coord.x= -dimension.upperLeftBack.x;
+        if ( coord.x + dimension.lowerRightFront.x > slopeWidth ) {
+        	coord.x= slopeWidth - dimension.lowerRightFront.x;
         }
 	}
 
@@ -103,7 +114,7 @@ class Player extends Sprite {
         }
 
     	shadowOfs.y= -playerJudder[playerJudderIndex];
-    	playerOfs.z=  20 * playerJudder[playerJudderIndex];
+    	playerOfs.z=  2 * playerJudder[playerJudderIndex];
         
         drawDrawable(canvas, mShadowImage, shadowOfs);
     	drawDrawable(canvas, mDriveImage, playerOfs);

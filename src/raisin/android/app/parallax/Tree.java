@@ -1,8 +1,9 @@
 /**
  * 
  */
-package raisin.android.example.parallax2;
+package raisin.android.app.parallax;
 
+import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
 import android.content.Context;
@@ -18,7 +19,7 @@ class Tree extends Sprite {
 	// Serializable
 	private int type;
 
-	Tree( GameRuntime.Stage stageData ) {
+	Tree( GameRuntime.StageData stageData ) {
 		super(stageData);
 	}
 
@@ -34,18 +35,23 @@ class Tree extends Sprite {
 	}
 	
 	@Override
-	public void init( GameRuntime.Stage stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
-		dimension= new Point3d(128, 128, 10);
-		hotspot= new Point3d(64, 120, 5);
+		dimension= Cube.CubeByHotspotDimension(
+			new Point3d(100, 25, 0), // hotspot
+			new Point3d(200, 50, 200) // dimension
+		);
+		hotCube= (new Cube(dimension)).scaleBy(0.25d, 0.25d, 1);
 	}
 	
 	void randomize() {
     	type= GameRuntime.random.nextInt(TREE_TYPES);
 		coord= new Point3d(
-				GameRuntime.random.nextDouble() * (GameRuntime.mCanvasWidth + dimension.x + hotspot.x),
-				mStageData.origin.y + GameRuntime.mCanvasHeight + hotspot.y,
-				GameRuntime.random.nextDouble() * this.mStageData.pointOfView.z
+				GameRuntime.random.nextDouble() * mStageData.getSlopeWidth(),
+				mStageData.origin.y
+					+ mStageData.getSlopeHeight()
+					+ dimension.dY(),
+				0
 		);
 	}
 
