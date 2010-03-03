@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable;
 abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 	// Unserializable
-	protected transient GameRuntime.Stage mStageData;
+	protected transient GameRuntime.StageData mStageData;
 	protected transient Point3d imageWHD;
 	protected transient Point3d imageScale;
 	
@@ -24,16 +24,16 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 	protected Cube dimension;
 	protected Cube hotCube;
 
-	Sprite( GameRuntime.Stage stageData ) {
+	Sprite( GameRuntime.StageData stageData ) {
 		init(stageData);
 	}
 
-	Sprite( GameRuntime.Stage stageData, Point3d hotspot, Point3d widthHeightDepth ) {
+	Sprite( GameRuntime.StageData stageData, Point3d hotspot, Point3d widthHeightDepth ) {
 		init(stageData);
 		dimension= Cube.CubeByHotspotDimension(hotspot, widthHeightDepth);
 	}
 
-	public void init( GameRuntime.Stage stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		this.mStageData= stageData;
 	}
 	
@@ -80,14 +80,15 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 
 		double z= coord.z + ofs.z;
 		if (z < 0) return; // do not draw anything if under ground
-		if (z > mStageData.pointOfView.z + 10) return; // do not draw anything if too near
-		double factor= mStageData.pointOfView.z / (mStageData.pointOfView.z - z);
+		if (z > mStageData.getPointOfView().z + 10) return; // do not draw anything if too near
+		Point3d pointOfView= mStageData.getPointOfView();
+		double factor= pointOfView.z / (pointOfView.z - z);
 		
 		double projection= mStageData.getProjection(canvas);
 		
 		Cube cube= (new Cube(dimension))
 			.add(coord).sub(ofs).sub(mStageData.origin)
-			.sub(mStageData.pointOfView).scaleBy(factor).add(mStageData.pointOfView)
+			.sub(pointOfView).scaleBy(factor).add(pointOfView)
 			.scaleBy(projection, projection, 0)
 		;
 		

@@ -42,7 +42,7 @@ class Player extends Sprite {
 	// Serializable
 	private boolean crash;
 	
-	Player( GameRuntime.Stage stageData ) {
+	Player( GameRuntime.StageData stageData ) {
 		super(stageData);
 		coord= new Point3d(-1, 50, 0);
 		dimension= Cube.CubeByHotspotDimension(
@@ -53,7 +53,7 @@ class Player extends Sprite {
 	}
 
 	@Override
-	public void init( GameRuntime.Stage stageData ) {
+	public void init( GameRuntime.StageData stageData ) {
 		super.init(stageData);
 		shadowOfs= new Point3d(0, 0, 0);
 		playerOfs= new Point3d(0, 0, 0);
@@ -79,9 +79,9 @@ class Player extends Sprite {
 		    	mDriveImage.getIntrinsicWidth(), mDriveImage.getIntrinsicHeight(), 10
 		);
 		imageScale= new Point3d(
-			imageWHD.x / Math.max(dimension.width(), 1),
-			imageWHD.y / Math.max(dimension.height(), 1),
-			imageWHD.z / Math.max(dimension.depth(), 1)
+			imageWHD.x / Math.max(dimension.dX(), 1),
+			imageWHD.y / Math.max(dimension.dY(), 1),
+			imageWHD.z / Math.max(dimension.dZ(), 1)
 		);
 	}
 
@@ -94,12 +94,13 @@ class Player extends Sprite {
 
 	public void addX(double diffx) {
 		fixWH();
-		if ( coord.x < 0 ) coord.x= mStageData.slopeWidth / 2;
+		double slopeWidth= mStageData.getSlopeWidth();
+		if ( coord.x < 0 ) coord.x= slopeWidth / 2;
 
         coord.x += diffx;
         if ( coord.x + dimension.upperLeftBack.x < 0 ) coord.x= -dimension.upperLeftBack.x;
-        if ( coord.x + dimension.lowerRightFront.x > mStageData.slopeWidth ) {
-        	coord.x= mStageData.slopeWidth - dimension.lowerRightFront.x;
+        if ( coord.x + dimension.lowerRightFront.x > slopeWidth ) {
+        	coord.x= slopeWidth - dimension.lowerRightFront.x;
         }
 	}
 

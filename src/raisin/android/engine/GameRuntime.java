@@ -26,31 +26,32 @@ public class GameRuntime implements Serializable {
 		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
 	}
 
-	public static class Stage {
+	public static transient int mCanvasHeight = 1;
+	public static transient int mCanvasWidth = 1;
+	
+	public static class StageData {
 		public Point3d origin= new Point3d();
-		public final double slopeWidth= 200; // 20m
-		public Point3d pointOfView= new Point3d(slopeWidth / 2, 0, 100);
-		public double getSlopeHeight(int width, int height) {
-			return slopeWidth / width * height;
+		public Point3d getPointOfView() {
+			return new Point3d(getSlopeWidth() / 2, 0, 100);
 		}
-		public double getSlopeHeight(Canvas canvas) {
-			return getSlopeHeight(canvas.getWidth(), canvas.getHeight());
+		public double getSlopeWidth() {
+			return mCanvasHeight > mCanvasWidth ? 200 : (getSlopeHeight() / mCanvasHeight * mCanvasWidth);
+		}
+		public double getSlopeHeight() {
+			return mCanvasWidth > mCanvasHeight ? 200 : (getSlopeWidth() / mCanvasWidth * mCanvasHeight);
 		}
 		public double getProjection(Canvas canvas) {
-			return canvas.getWidth() / slopeWidth;
+			return canvas.getWidth() / getSlopeWidth();
 		}
 	}
 
 	public static Random random= new Random();
 
-	public static transient int mCanvasHeight = 1;
-	public static transient int mCanvasWidth = 1;
-	
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
 	private static GameRuntime instance;
 	
-    protected static GameRuntime.Stage mStage= new GameRuntime.Stage();
+    protected static GameRuntime.StageData mStage= new GameRuntime.StageData();
 
     // Unserializable
 

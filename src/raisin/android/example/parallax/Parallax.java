@@ -89,7 +89,7 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
     public void restart() {
     	super.restart();
 
-    	mStage= new GameRuntime.Stage();
+    	mStage= new GameRuntime.StageData();
         sprites= new ArrayList<Sprite>();
         mTrees= new ArrayList<Tree>();
 
@@ -213,6 +213,9 @@ public final class Parallax extends GameRuntime implements SensorEventListener, 
         mStage.origin.y += elapsed * fspeed;
         player.coord.y += elapsed * fspeed;
 
+        Log.w("parallax", "stage.origin.y" + mStage.origin.y);
+        Log.w("parallax", "player.coord.y" + player.coord.y);
+        
         player.update(gameState);
         
         // Log.e("update-top", "elapsed=" + elapsed + " top=" + top);
