@@ -3,6 +3,7 @@
  */
 package raisin.android.app.test;
 
+import raisin.android.MainActivity;
 import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import raisin.android.engine.GameRuntime;
@@ -27,7 +28,7 @@ class Tree extends Sprite {
     	if ( mTreeImages != null ) return;
         	
 		mTreeImages= new Drawable[TREE_TYPES];
-    	String prefix= GameRuntime.class.getPackage().getName() + ":drawable/tree";
+    	String prefix= MainActivity.class.getPackage().getName() + ":drawable/tree";
         for ( int i= 0; i < TREE_TYPES; i++ ) {
 	        int id= context.getResources().getIdentifier(prefix + (i + 1), null, null);
 	        mTreeImages[i]= context.getResources().getDrawable(id);
