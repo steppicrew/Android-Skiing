@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-import raisin.android.app.test.StageData;
 
 import android.content.Context;
 import android.graphics.Canvas;

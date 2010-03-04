@@ -12,17 +12,13 @@ import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameTime;
 import raisin.android.engine.math.Cube;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
