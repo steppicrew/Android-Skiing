@@ -69,8 +69,6 @@ public class GameView extends SurfaceView
         }
         catch (Exception e) {
             e.printStackTrace();
-        	// mGameRuntime= new GameRuntime2();
-        	// mGameRuntime.init(getContext());
         }
         if ( newGameRuntime != null ) mGameRuntime= newGameRuntime;
         

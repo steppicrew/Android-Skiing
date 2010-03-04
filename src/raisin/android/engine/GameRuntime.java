@@ -6,19 +6,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Random;
 
 import raisin.android.app.test.StageData;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public abstract class GameRuntime implements Serializable {
+public abstract class GameRuntime implements SensorEventListener, Serializable {
 
 	// Static data
 	
@@ -41,10 +45,9 @@ public abstract class GameRuntime implements Serializable {
 	protected GameRuntime.GameState gameState;
 
     public abstract boolean refresh( Canvas canvas );
-	public abstract void onSensorChanged( SensorEvent event );
-    // public void destroy();
     public abstract void skipToNextState();
-	
+
+    
 	public void freeze() {
 		try {
     		baos.reset();
@@ -77,10 +80,42 @@ public abstract class GameRuntime implements Serializable {
         throw new Exception("Uh oh!");
 	}
 	
+    private transient SensorManager mSensorManager;
+	private transient Sensor mSensor;
+	
     public void init( Context context ) {
     	mContext= context;
+
+    	mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    	List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+    	if ( sensors.size() > 0 ) {
+    		mSensor= sensors.get(0);
+    		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    	}
+    	else {
+    		mSensorManager= null;
+    	}
     }
-    
+
+	@Override
+	public void onAccuracyChanged( Sensor sensor, int accuracy ) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public abstract void doOnSensorChanged( SensorEvent event );
+
+	@Override
+	public void onSensorChanged( SensorEvent event ) {
+		// if ( event.values.length > 0 ) Log.w("Sensor 0", "" + event.values[0]);
+		// if ( event.values.length > 1 ) Log.w("Sensor 1", "" + event.values[1]);
+		// if ( event.values.length > 2 ) Log.w("Sensor 2", "" + event.values[2]);
+
+		if ( event.values.length > 2 ) {
+			doOnSensorChanged(event);
+		}
+	}
+
     // Check Integrity
     public void setState( GameRuntime.GameState state ) {
     	switch ( state ) {
@@ -106,12 +141,28 @@ public abstract class GameRuntime implements Serializable {
     
     public void restart() {
     	gameState= GameRuntime.GameState.INTRO;
+      	mStage= new StageData();
+    	GameTime.reset();
     }
+
     
     public void destroy() {
-    	// Empty
+    	if ( mSensorManager != null ) {
+    		mSensorManager.unregisterListener(this, mSensor);
+    	}
+    		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
     }
-    
+
+    protected void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    	out.writeInt(gameState.ordinal());
+    }
+
+    protected void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        restart();
+    	gameState= GameRuntime.GameState.values()[in.readInt()];
+    	mStage.origin.y= in.readDouble();
+    }
+
     public void setSurfaceSize( int width, int height ) {
         	
     	Log.w("SetSurfaceSize", "width=" + width + ", height=" + height);
