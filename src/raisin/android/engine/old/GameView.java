@@ -1,6 +1,7 @@
-package raisin.android.engine;
+package raisin.android.engine.old;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -17,15 +18,103 @@ public class GameView extends SurfaceView
 	implements SurfaceHolder.Callback, OnTouchListener
 {
 
+	private final class GameThread extends Thread {
+
+        private SurfaceHolder mSurfaceHolder;
+        private Context mContext;
+
+        private boolean mRun = false;
+                
+		public GameThread(SurfaceHolder surfaceHolder, Context context,
+				Handler handler) {
+
+            mSurfaceHolder = surfaceHolder;
+			mContext= context;
+        }
+
+		public boolean isRunning() {
+			return mRun;
+		}
+		
+		public void setRunning(boolean running) {
+            mRun = running;
+        }
+        
+        @Override
+        public void run() {
+        	Log.w("GameThread", "run start");
+        	while (mRun) {
+                Canvas canvas = null;
+                try {
+                    canvas = mSurfaceHolder.lockCanvas(null);
+                    boolean doSleep;
+                    synchronized (mSurfaceHolder) {
+                    	doSleep= GameRuntime.instance(mContext).refresh(canvas);
+                    }
+                    if ( doSleep ) {
+						try {
+							Log.w("Sleeping...", "");
+							sleep(100);
+						} catch (InterruptedException e) {
+						}
+                    }
+                } finally {
+                    // do this in a finally so that if an exception is thrown
+                    // during the above, we don't leave the Surface in an
+                    // inconsistent state
+                    if (canvas != null) {
+                        mSurfaceHolder.unlockCanvasAndPost(canvas);
+                    }
+                }
+            }
+        	GameRuntime.instance(mContext).destroy();
+        	Log.w("GameThread", "run end");
+        }
+
+        public void setSurfaceSize(int width, int height) {
+            // synchronized to make sure these all change atomically
+            synchronized (mSurfaceHolder) {
+            	GameRuntime.instance(mContext).setSurfaceSize(width, height);
+            }
+        }
+
+        public void restart() {
+            synchronized (mSurfaceHolder) {
+            	GameRuntime.instance(mContext).restart();
+            }
+        }
+        
+        public void pause() {
+         	Log.w("GameThread", "pause start");
+ 
+            synchronized (mSurfaceHolder) {
+            	GameRuntime.instance(mContext).pause();
+            }
+        	Log.w("GameThread", "pause end");
+        }
+
+        public void unpause() {
+        	Log.w("GameThread", "unpause start");
+            synchronized (mSurfaceHolder) {
+            	GameRuntime.instance(mContext).unpause();
+            }
+        	Log.w("GameThread", "unpause end");
+        }
+
+		public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
+            synchronized (mSurfaceHolder) {
+            	return GameRuntime.instance(mContext).handleKeyEvent(v, keyCode, event);
+            }
+		}
+	}
+
     /** The thread that actually draws the animation */
     private GameThread thread;
 
     /** Pointer to the text view to display "Paused.." etc. */
     private TextView mStatusText;
 
-    // private Context mContext;
-
-    private GameRuntime mGameRuntime;
+    private Context mContext;
     
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,15 +125,10 @@ public class GameView extends SurfaceView
         SurfaceHolder holder = getHolder();
         holder.addCallback(this);
 
-        // mContext= context;
+        mContext= context;
 
         setFocusable(true); // make sure we get key events
     }
-
-    public void setGameRuntime( GameRuntime gameRuntime ) {
-    	mGameRuntime= gameRuntime;
-    	mGameRuntime.init(getContext());
-	}
 
     public void restartGame() {
     	thread.restart();
@@ -63,18 +147,7 @@ public class GameView extends SurfaceView
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 
-    	GameRuntime newGameRuntime= null;
-        try {
-        	newGameRuntime= GameRuntime.thaw(getContext());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        	// mGameRuntime= new GameRuntime2();
-        	// mGameRuntime.init(getContext());
-        }
-        if ( newGameRuntime != null ) mGameRuntime= newGameRuntime;
-        
-        thread = new GameThread(holder, mGameRuntime, new Handler() {
+        thread = new GameThread(holder, mContext, new Handler() {
             @Override
             public void handleMessage(Message m) {
                 mStatusText.setVisibility(m.getData().getInt("viz"));
@@ -83,6 +156,8 @@ public class GameView extends SurfaceView
         });
         
         setOnTouchListener(this);
+        
+        GameRuntime.thaw(mContext);
         
 		thread.setRunning(true);
     	Log.w("GameThread", "thread.start start");
@@ -105,7 +180,7 @@ public class GameView extends SurfaceView
         }
     	Log.w("GameThread", "thread.join end");
 
-    	mGameRuntime.freeze();
+    	GameRuntime.freeze();
 
     	thread= null;
 	}

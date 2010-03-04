@@ -4,6 +4,7 @@
 package raisin.android.app.test;
 
 import raisin.android.R;
+import raisin.android.engine.GameRuntime;
 import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import android.content.Context;
@@ -85,8 +86,8 @@ class Player extends Sprite {
 	}
 
 	@Override
-	public void update( GameRuntime2.GameState state ) {
-		if ( state == GameRuntime2.GameState.RUNNING ) {
+	public void update( GameRuntime.GameState state ) {
+		if ( state == GameRuntime.GameState.RUNNING ) {
 			playerJudderIndex= ++playerJudderIndex % playerJudder.length;
 		}
 	}

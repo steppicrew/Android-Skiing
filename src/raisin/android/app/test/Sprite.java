@@ -5,6 +5,7 @@ package raisin.android.app.test;
 
 import java.io.Serializable;
 
+import raisin.android.engine.GameRuntime;
 import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import android.graphics.Canvas;
@@ -47,7 +48,7 @@ abstract class Sprite implements Comparable<Sprite>, Serializable {
 		return zDiff;
 	}
 
-	public void update( GameRuntime2.GameState state ) {
+	public void update( GameRuntime.GameState state ) {
 		// Empty
 	}
 

@@ -1,4 +1,4 @@
-package raisin.android.app.test;
+package raisin.android.engine.old;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,15 +8,17 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
+import raisin.android.engine.math.Point3d;
+
+
 import android.content.Context;
 import android.graphics.Canvas;
-import android.hardware.SensorEvent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public abstract class GameRuntime2 implements Serializable {
+public class GameRuntime implements Serializable {
 
 	// Static data
 	
@@ -24,75 +26,97 @@ public abstract class GameRuntime2 implements Serializable {
 		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
 	}
 
+	public static transient int mCanvasHeight = 1;
+	public static transient int mCanvasWidth = 1;
+	
+	public static class StageData {
+		public Point3d origin= new Point3d();
+		public Point3d getPointOfView() {
+			return new Point3d(getSlopeWidth() / 2, 0, 100);
+		}
+		public double getSlopeWidth() {
+			return mCanvasHeight > mCanvasWidth ? 200 : (getSlopeHeight() / mCanvasHeight * mCanvasWidth);
+		}
+		public double getSlopeHeight() {
+			return mCanvasWidth > mCanvasHeight ? 200 : (getSlopeWidth() / mCanvasWidth * mCanvasHeight);
+		}
+		public double getProjection(Canvas canvas) {
+			return canvas.getWidth() / getSlopeWidth();
+		}
+	}
+
 	public static Random random= new Random();
 
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
+	private static GameRuntime instance;
+	
+    protected static GameRuntime.StageData mStage= new GameRuntime.StageData();
+
     // Unserializable
 
-	protected transient StageData mStage= new StageData();
-	
 	protected transient Context mContext;
 
 	// Serializable
 
-	protected GameRuntime2.GameState gameState;
+	protected GameRuntime.GameState gameState;
 
-    public abstract boolean refresh( Canvas canvas );
-	public abstract void onSensorChanged( SensorEvent event );
-    // public void destroy();
-    public abstract void skipToNextState();
-	
-	public void freeze() {
+	static public GameRuntime instance( Context context ) {
+		if ( instance == null ) {
+			instance= new raisin.android.app.parallax.Parallax();
+			instance.init(context);
+		}
+		return instance;
+	}
+
+	public static void freeze() {
 		try {
     		baos.reset();
+    		if ( instance == null ) return;
+
     		ObjectOutputStream oos= new ObjectOutputStream(baos);
-    		oos.writeObject(this);
+    		oos.writeObject(instance);
     		oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-	// TODO: Fix Exceptions!
-	public static GameRuntime2 thaw( Context context ) throws Exception {
-		if ( baos.size() == 0 ) throw new Exception("No Stream, no data");
+	public static void thaw( Context context ) {
+		if ( baos.size() == 0 ) return;
 		try {
     		ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
     		ObjectInputStream ois= new ObjectInputStream(bais);
-    		GameRuntime2 instance= (GameRuntime2) ois.readObject();
+    		instance= (GameRuntime) ois.readObject();
     		instance.init(context);
     		ois.close();
-            return instance;
-
-		} catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
 			e.printStackTrace();
         } catch (Exception e) {
 			e.printStackTrace();
 		}
-        throw new Exception("Uh oh!");
-	}
+    }
 	
     public void init( Context context ) {
     	mContext= context;
     }
     
     // Check Integrity
-    public void setState( GameRuntime2.GameState state ) {
+    public void setState( GameRuntime.GameState state ) {
     	switch ( state ) {
 	    	case PAUSE:
-	    		if ( gameState == GameRuntime2.GameState.RUNNING ) {
-	    	        GameTime2.stop();
+	    		if ( gameState == GameRuntime.GameState.RUNNING ) {
+	    	        GameTime.stop();
 	    			gameState= state;
 	    			break;
 	    		}
 	    		break;
 
 	    	case RUNNING:
-	    		if ( gameState == GameRuntime2.GameState.INTRO
-		    		 || gameState == GameRuntime2.GameState.PAUSE )
+	    		if ( gameState == GameRuntime.GameState.INTRO
+		    		 || gameState == GameRuntime.GameState.PAUSE )
 	    		{
 	    			gameState= state;
 	    			break;
@@ -103,7 +127,7 @@ public abstract class GameRuntime2 implements Serializable {
     }
     
     public void restart() {
-    	gameState= GameRuntime2.GameState.INTRO;
+    	gameState= GameRuntime.GameState.INTRO;
     }
     
     public void destroy() {
@@ -114,9 +138,8 @@ public abstract class GameRuntime2 implements Serializable {
         	
     	Log.w("SetSurfaceSize", "width=" + width + ", height=" + height);
     	
-    	mStage.mCanvasWidth = width;
-    	mStage.mCanvasHeight = height;
-    	mStage.setWidth(200);
+    	GameRuntime.mCanvasWidth = width;
+    	GameRuntime.mCanvasHeight = height;
     }
 
 	public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
@@ -125,10 +148,15 @@ public abstract class GameRuntime2 implements Serializable {
 	}
 
     public void pause() {
-        setState(GameState.PAUSE);
+        setState(GameRuntime.GameState.PAUSE);
     }
 
     public void unpause() {
-        setState(GameState.RUNNING);
+        setState(GameRuntime.GameState.RUNNING);
     }
+
+	public boolean refresh(Canvas canvas) {
+    	return false;
+	}
+
 }

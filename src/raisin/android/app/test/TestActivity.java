@@ -1,13 +1,16 @@
 package raisin.android.app.test;
 
-public class TestActivity extends GameActivity2 {
+import raisin.android.engine.GameActivity;
+import raisin.android.engine.GameRuntime;
+
+public class TestActivity extends GameActivity {
 
 	public TestActivity() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	protected final GameRuntime2 createGameRuntime() {
+	protected final GameRuntime createGameRuntime() {
 		return new TestRuntime();
 	}
 	

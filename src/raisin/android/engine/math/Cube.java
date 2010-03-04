@@ -2,6 +2,7 @@ package raisin.android.engine.math;
 
 import java.io.Serializable;
 
+
 @SuppressWarnings("serial")
 public class Cube implements Serializable {
 	public Point3d upperLeftBack;

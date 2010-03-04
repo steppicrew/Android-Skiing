@@ -8,17 +8,17 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Random;
 
-import raisin.android.engine.math.Point3d;
-
+import raisin.android.app.test.StageData;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.hardware.SensorEvent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public class GameRuntime implements Serializable {
+public abstract class GameRuntime implements Serializable {
 
 	// Static data
 	
@@ -26,78 +26,56 @@ public class GameRuntime implements Serializable {
 		INTRO, LOSE, PAUSE, READY, RUNNING, WIN,
 	}
 
-	public static transient int mCanvasHeight = 1;
-	public static transient int mCanvasWidth = 1;
-	
-	public static class StageData {
-		public Point3d origin= new Point3d();
-		public Point3d getPointOfView() {
-			return new Point3d(getSlopeWidth() / 2, 0, 100);
-		}
-		public double getSlopeWidth() {
-			return mCanvasHeight > mCanvasWidth ? 200 : (getSlopeHeight() / mCanvasHeight * mCanvasWidth);
-		}
-		public double getSlopeHeight() {
-			return mCanvasWidth > mCanvasHeight ? 200 : (getSlopeWidth() / mCanvasWidth * mCanvasHeight);
-		}
-		public double getProjection(Canvas canvas) {
-			return canvas.getWidth() / getSlopeWidth();
-		}
-	}
-
 	public static Random random= new Random();
 
 	private static ByteArrayOutputStream baos= new ByteArrayOutputStream();
 
-	private static GameRuntime instance;
-	
-    protected static GameRuntime.StageData mStage= new GameRuntime.StageData();
-
     // Unserializable
 
+	protected transient StageData mStage= new StageData();
+	
 	protected transient Context mContext;
 
 	// Serializable
 
 	protected GameRuntime.GameState gameState;
 
-	static public GameRuntime instance( Context context ) {
-		if ( instance == null ) {
-			instance= new raisin.android.app.parallax.Parallax();
-			instance.init(context);
-		}
-		return instance;
-	}
-
-	public static void freeze() {
+    public abstract boolean refresh( Canvas canvas );
+	public abstract void onSensorChanged( SensorEvent event );
+    // public void destroy();
+    public abstract void skipToNextState();
+	
+	public void freeze() {
 		try {
     		baos.reset();
-    		if ( instance == null ) return;
-
     		ObjectOutputStream oos= new ObjectOutputStream(baos);
-    		oos.writeObject(instance);
+    		oos.writeObject(this);
     		oos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
-	public static void thaw( Context context ) {
-		if ( baos.size() == 0 ) return;
+	// TODO: Fix Exceptions!
+	public static GameRuntime thaw( Context context ) throws Exception {
+		if ( baos.size() == 0 ) throw new Exception("No Stream, no data");
 		try {
     		ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
     		ObjectInputStream ois= new ObjectInputStream(bais);
-    		instance= (GameRuntime) ois.readObject();
+    		GameRuntime instance= (GameRuntime) ois.readObject();
     		instance.init(context);
     		ois.close();
-        } catch (IOException e) {
+            return instance;
+
+		} catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
 			e.printStackTrace();
         } catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+        throw new Exception("Uh oh!");
+	}
 	
     public void init( Context context ) {
     	mContext= context;
@@ -138,8 +116,9 @@ public class GameRuntime implements Serializable {
         	
     	Log.w("SetSurfaceSize", "width=" + width + ", height=" + height);
     	
-    	GameRuntime.mCanvasWidth = width;
-    	GameRuntime.mCanvasHeight = height;
+    	mStage.mCanvasWidth = width;
+    	mStage.mCanvasHeight = height;
+    	mStage.setWidth(200);
     }
 
 	public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
@@ -148,15 +127,10 @@ public class GameRuntime implements Serializable {
 	}
 
     public void pause() {
-        setState(GameRuntime.GameState.PAUSE);
+        setState(GameState.PAUSE);
     }
 
     public void unpause() {
-        setState(GameRuntime.GameState.RUNNING);
+        setState(GameState.RUNNING);
     }
-
-	public boolean refresh(Canvas canvas) {
-    	return false;
-	}
-
 }

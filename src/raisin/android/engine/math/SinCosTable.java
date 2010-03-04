@@ -1,5 +1,6 @@
 package raisin.android.engine.math;
 
+
 public class SinCosTable {
 
 	/**

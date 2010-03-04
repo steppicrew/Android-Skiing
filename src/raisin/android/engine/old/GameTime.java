@@ -1,7 +1,7 @@
 /**
  * 
  */
-package raisin.android.app.test;
+package raisin.android.engine.old;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,22 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-public class GameTime2 implements Serializable {
+public class GameTime implements Serializable {
 	
-	public static GameTime2 master= new GameTime2(true);
-	public static List<GameTime2> instances= new ArrayList<GameTime2>();
+	public static GameTime master= new GameTime(true);
+	public static List<GameTime> instances= new ArrayList<GameTime>();
 
 	public static void reset() {
 		instances.clear();
 	}
 	
-	public static GameTime2 newInstance() {
-		GameTime2 instance= new GameTime2(false);
+	public static GameTime newInstance() {
+		GameTime instance= new GameTime(false);
 		return instance;
 	}
 	
 	public static void stop() {
-		for ( GameTime2 instance: instances ) instance.mLastTime -= master.mLastTime;
+		for ( GameTime instance: instances ) instance.mLastTime -= master.mLastTime;
 		master.mLastTime= 0;
 	}
 
@@ -43,7 +43,7 @@ public class GameTime2 implements Serializable {
 
         	// Wenn mLastTime 0 ist, enthalten folgende Zeitvariablen
         	// relative Werte und m�ssen angepasst werden
-    		for ( GameTime2 instance: instances ) instance.mLastTime += master.mLastTime;
+    		for ( GameTime instance: instances ) instance.mLastTime += master.mLastTime;
         }
 		
 		double elapsed = master.mLastTime == 0 ? 0 : (nowTime - master.mLastTime) / 1000.0;
@@ -55,7 +55,7 @@ public class GameTime2 implements Serializable {
 	private transient boolean isMaster;
 	private long mLastTime;
 
-	private GameTime2( boolean isMaster ) {
+	private GameTime( boolean isMaster ) {
 		this.isMaster= isMaster;
 	}
 

@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import raisin.android.R;
+import raisin.android.engine.GameRuntime;
+import raisin.android.engine.GameTime;
 import raisin.android.engine.math.Cube;
 
 import android.content.Context;
@@ -26,7 +28,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public class TestRuntime extends GameRuntime2 implements SensorEventListener, Serializable {
+public class TestRuntime extends GameRuntime implements SensorEventListener, Serializable {
 
 	private static final int MAX_TREES= 8;
 
@@ -36,8 +38,8 @@ public class TestRuntime extends GameRuntime2 implements SensorEventListener, Se
 	private int lifes;
 	private double score;
 
-    private GameTime2 mNextTreeTime;
-    private GameTime2 mCrashUntilTime;
+    private GameTime mNextTreeTime;
+    private GameTime mCrashUntilTime;
 	
     private float accel;
     private float fspeed;
@@ -47,7 +49,7 @@ public class TestRuntime extends GameRuntime2 implements SensorEventListener, Se
     private List<Tree> mTrees= new ArrayList<Tree>();
 
 	// Unserializable
-    private transient GameTime2 mPlayerLastMoveTime;
+    private transient GameTime mPlayerLastMoveTime;
 
     private transient float playerMoveX;
 	private transient float playerMoveY;
@@ -93,10 +95,10 @@ public class TestRuntime extends GameRuntime2 implements SensorEventListener, Se
 
     	player= new Player(mStage);
     	
-    	GameTime2.reset();
-        mPlayerLastMoveTime= GameTime2.newInstance();
-        mNextTreeTime= GameTime2.newInstance();
-        mCrashUntilTime= GameTime2.newInstance();
+    	GameTime.reset();
+        mPlayerLastMoveTime= GameTime.newInstance();
+        mNextTreeTime= GameTime.newInstance();
+        mCrashUntilTime= GameTime.newInstance();
 
         lifes= 5;
     	mStage.origin.y= 0;
@@ -124,7 +126,7 @@ public class TestRuntime extends GameRuntime2 implements SensorEventListener, Se
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         restart();
-    	gameState= GameRuntime2.GameState.values()[in.readInt()];
+    	gameState= GameRuntime.GameState.values()[in.readInt()];
     	lifes= in.readInt();
     	mStage.origin.y= in.readDouble();
     	score= in.readDouble();
@@ -189,7 +191,7 @@ public class TestRuntime extends GameRuntime2 implements SensorEventListener, Se
 
         // Log.e("gameState", "" + gameState);
         
-        double elapsed = GameTime2.getElapsed();
+        double elapsed = GameTime.getElapsed();
 
         if ( mPlayerLastMoveTime.runOut() ) {
         	mPlayerLastMoveTime.setOffset(10);

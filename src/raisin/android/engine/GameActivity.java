@@ -2,13 +2,13 @@ package raisin.android.engine;
 
 import raisin.android.R;
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.os.Bundle;
 
-public class GameActivity extends Activity {
+public abstract class GameActivity extends Activity {
 
 	final int MENU_NEW_GAME = 1;
 	final int MENU_QUIT = 2;
@@ -28,12 +28,15 @@ public class GameActivity extends Activity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.test);
         
-        // get handles to the LunarView from XML, and its LunarThread
         mGameView = (GameView) findViewById(R.id.surface);
+        mGameView.setGameRuntime(createGameRuntime());
+
         // mGameThread = mGameView.getThread();
     }
+
+	protected abstract GameRuntime createGameRuntime();
 
     /* Creates the menu items */
     public boolean onCreateOptionsMenu(Menu menu) {

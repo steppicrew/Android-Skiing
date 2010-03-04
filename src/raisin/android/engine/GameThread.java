@@ -1,4 +1,4 @@
-package raisin.android.app.test;
+package raisin.android.engine;
 
 import android.graphics.Canvas;
 import android.os.Handler;
@@ -7,14 +7,14 @@ import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 
-public class GameThread2 extends Thread {
+public class GameThread extends Thread {
 
     private SurfaceHolder mSurfaceHolder;
-    private GameRuntime2 mGameRuntime;
+    private GameRuntime mGameRuntime;
     
     private boolean mRun = false;
             
-	public GameThread2(SurfaceHolder surfaceHolder, GameRuntime2 gameRuntime,
+	public GameThread(SurfaceHolder surfaceHolder, GameRuntime gameRuntime,
 			Handler handler) {
 
         mSurfaceHolder = surfaceHolder;

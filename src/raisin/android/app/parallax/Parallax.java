@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import raisin.android.engine.GameRuntime;
-import raisin.android.engine.GameTime;
 import raisin.android.R;
 import raisin.android.engine.math.Cube;
+import raisin.android.engine.old.GameRuntime;
+import raisin.android.engine.old.GameTime;
 
 import android.content.Context;
 import android.content.res.Resources;

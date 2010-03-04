@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
-import raisin.android.engine.GameRuntime;
+import raisin.android.engine.old.GameRuntime;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 

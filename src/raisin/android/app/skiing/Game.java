@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import raisin.android.engine.GameRuntime;
+import raisin.android.engine.old.GameRuntime;
 import raisin.android.R;
 
 import android.content.Context;
