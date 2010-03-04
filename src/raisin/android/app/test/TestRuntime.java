@@ -26,7 +26,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public class TestRuntime extends GameRuntime2 implements IGameListener, SensorEventListener, Serializable {
+public class TestRuntime extends GameRuntime2 implements SensorEventListener, Serializable {
 
 	private static final int MAX_TREES= 8;
 

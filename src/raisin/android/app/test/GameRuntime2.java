@@ -10,6 +10,7 @@ import java.util.Random;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.hardware.SensorEvent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -37,6 +38,11 @@ public abstract class GameRuntime2 implements Serializable {
 
 	protected GameRuntime2.GameState gameState;
 
+    public abstract boolean refresh( Canvas canvas );
+	public abstract void onSensorChanged( SensorEvent event );
+    // public void destroy();
+    public abstract void skipToNextState();
+	
 	public void freeze() {
 		try {
     		baos.reset();
@@ -125,9 +131,4 @@ public abstract class GameRuntime2 implements Serializable {
     public void unpause() {
         setState(GameState.RUNNING);
     }
-
-	public boolean refresh(Canvas canvas) {
-    	return false;
-	}
-
 }
