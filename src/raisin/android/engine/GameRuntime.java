@@ -35,12 +35,12 @@ public abstract class GameRuntime implements SensorEventListener, Serializable {
 
     // Unserializable
 
-	protected transient StageData mStage= new StageData();
-	
 	protected transient Context mContext;
 
 	// Serializable
 
+	protected StageData mStage= new StageData();
+	
 	protected GameRuntime.GameState gameState;
 
     public abstract boolean refresh( Canvas canvas );
@@ -49,6 +49,7 @@ public abstract class GameRuntime implements SensorEventListener, Serializable {
     
 	public void freeze() {
 		try {
+			pause();
     		baos.reset();
     		ObjectOutputStream oos= new ObjectOutputStream(baos);
     		oos.writeObject(this);
@@ -65,7 +66,7 @@ public abstract class GameRuntime implements SensorEventListener, Serializable {
     		ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
     		ObjectInputStream ois= new ObjectInputStream(bais);
     		GameRuntime instance= (GameRuntime) ois.readObject();
-    		instance.initThaw();
+    		instance.initAfterThaw();
     		instance.init(context);
     		ois.close();
             return instance;
@@ -97,8 +98,19 @@ public abstract class GameRuntime implements SensorEventListener, Serializable {
     	}
     }
 
-    protected void initThaw() {
-    	// may be overwritten
+    public void restart() {
+    	gameState= GameRuntime.GameState.INTRO;
+    	GameTime.reset();
+    	restartOrThaw();
+    }
+
+    protected void restartOrThaw() {
+    	// stub, may be overwritten
+    	// contains common parts for restart() and initAfterThaw()
+    }
+    
+    protected void initAfterThaw() {
+    	restartOrThaw();
     }
     
 	@Override
@@ -143,28 +155,11 @@ public abstract class GameRuntime implements SensorEventListener, Serializable {
     	Log.w("setState", "state: " + state + " gameState:" + gameState);
     }
     
-    public void restart() {
-    	gameState= GameRuntime.GameState.INTRO;
-      	mStage= new StageData();
-    	GameTime.reset();
-    }
-
-    
     public void destroy() {
     	if ( mSensorManager != null ) {
     		mSensorManager.unregisterListener(this, mSensor);
     	}
     		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
-    }
-
-    protected void writeObject(java.io.ObjectOutputStream out) throws IOException {
-    	out.writeInt(gameState.ordinal());
-    }
-
-    protected void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        restart();
-    	gameState= GameRuntime.GameState.values()[in.readInt()];
-    	mStage.origin.y= in.readDouble();
     }
 
     public void setSurfaceSize( int width, int height ) {
@@ -187,5 +182,13 @@ public abstract class GameRuntime implements SensorEventListener, Serializable {
 
     public void unpause() {
         setState(GameState.RUNNING);
+    }
+
+    public void togglePause() {
+    	if ( gameState == GameState.RUNNING ) { 
+    		pause();
+    		return;
+    	}
+    	unpause();
     }
 }

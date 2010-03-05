@@ -1,14 +1,17 @@
 package raisin.android.engine;
 
+import java.io.Serializable;
+
 import raisin.android.engine.math.Point3d;
 import android.graphics.Canvas;
 
-public class StageData {
+@SuppressWarnings("serial")
+public class StageData implements Serializable {
 	
 	public transient int mCanvasHeight = 1;
 	public transient int mCanvasWidth = 1;
 	
-	public transient Point3d origin= new Point3d();
+	public Point3d origin= new Point3d();
 	
 	private transient double width;
 	

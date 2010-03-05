@@ -1,6 +1,5 @@
 package raisin.android.app.test;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +9,6 @@ import java.util.List;
 import raisin.android.R;
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameTime;
-import raisin.android.engine.StageData;
 import raisin.android.engine.math.Cube;
 
 import android.content.res.Resources;
@@ -67,16 +65,17 @@ public class TestRuntime extends GameRuntime implements Serializable {
 
     @Override
     public void restart() {
+    	GameTime.reset();
     	super.restart();
 
-        sprites= new ArrayList<Sprite>();
         mTrees= new ArrayList<Tree>();
 
     	player= new Player(mStage);
     	
-        mPlayerLastMoveTime= GameTime.newInstance();
-        mNextTreeTime= GameTime.newInstance();
-        mCrashUntilTime= GameTime.newInstance();
+    	GameTime.unregister(mNextTreeTime);
+    	GameTime.register(mNextTreeTime= new GameTime());
+    	GameTime.unregister(mCrashUntilTime);
+    	GameTime.register(mCrashUntilTime= new GameTime());
 
         lifes= 5;
     	mStage.origin.y= 0;
@@ -84,69 +83,22 @@ public class TestRuntime extends GameRuntime implements Serializable {
 
         accel= 0;
         fspeed= 0;
-    	rebuildSpriteList= true;
     }
     
-    public void restartThaw() {
-    	mStage= new StageData();
-        sprites= new ArrayList<Sprite>();
-        mTrees= new ArrayList<Tree>();
-
-    	player= new Player(mStage);
-    	
-    	GameTime.reset();
-        mPlayerLastMoveTime= GameTime.newInstance();
-        mNextTreeTime= GameTime.newInstance();
-        mCrashUntilTime= GameTime.newInstance();
-
-        lifes= 5;
-    	mStage.origin.y= 0;
-    	score= 0;
-
-        accel= 0;
-        fspeed= 0;
+    @Override
+    public void restartOrThaw() {
+    	super.restartOrThaw();
+    	sprites= new ArrayList<Sprite>();
+    	GameTime.unregister(mPlayerLastMoveTime);
+    	GameTime.register(mPlayerLastMoveTime= new GameTime());
     	rebuildSpriteList= true;
     }
+   
     @Override
-    protected void initThaw() {
-    	super.initThaw();
-        restart();
+    protected void initAfterThaw() {
+    	super.initAfterThaw();
     	for ( Tree tree: mTrees ) tree.init(mStage);
     	player.init(mStage);
-    }
-
-    // TODO: super() fuer mStage
-    protected final void XwriteObject(java.io.ObjectOutputStream out) throws IOException {
-        super.writeObject(out);
-
-        out.writeInt(lifes);
-    	out.writeDouble(score);
-    	mNextTreeTime.writeToStream(out);
-    	mCrashUntilTime.writeToStream(out);
-    	out.writeFloat(accel);
-    	out.writeFloat(fspeed);
-    	out.writeObject(player);
-    	out.writeInt(mTrees.size());
-    	for ( Tree tree: mTrees ) out.writeObject(tree);
-    }
-
-    private void XreadObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        super.readObject(in);
-
-        lifes= in.readInt();
-    	score= in.readDouble();
-        mNextTreeTime.readFromStream(in);
-        mCrashUntilTime.readFromStream(in);
-    	accel= in.readFloat();
-    	fspeed= in.readFloat();
-    	player= (Player) in.readObject();
-    	player.init(mStage);
-    	mTrees.clear();
-    	for ( int i= in.readInt(); i > 0; i-- ) {
-    		Tree tree= (Tree) in.readObject();
-    		tree.init(mStage);
-    		mTrees.add(tree);
-    	}
     }
 
     private void fixContent() {
@@ -175,11 +127,13 @@ public class TestRuntime extends GameRuntime implements Serializable {
     }
     
 	public double getSlopeWidth() {
-		return mStage.mCanvasHeight > mStage.mCanvasWidth ? 200 : (getSlopeHeight() / mStage.mCanvasHeight * mStage.mCanvasWidth);
+		return 200;
+//		return mStage.mCanvasHeight > mStage.mCanvasWidth ? 200 : (getSlopeHeight() / mStage.mCanvasHeight * mStage.mCanvasWidth);
 	}
 	
 	public double getSlopeHeight() {
-		return mStage.mCanvasWidth > mStage.mCanvasHeight ? 200 : (getSlopeWidth() / mStage.mCanvasWidth * mStage.mCanvasHeight);
+		return getSlopeWidth() / mStage.mCanvasWidth * mStage.mCanvasHeight;
+//		return mStage.mCanvasWidth > mStage.mCanvasHeight ? 200 : (getSlopeWidth() / mStage.mCanvasWidth * mStage.mCanvasHeight);
 	}
 
     private void buildSpriteList() {
@@ -196,8 +150,6 @@ public class TestRuntime extends GameRuntime implements Serializable {
 
         // Log.e("gameState", "" + gameState);
         
-        double elapsed = GameTime.getElapsed();
-
         if ( mPlayerLastMoveTime.runOut() ) {
         	mPlayerLastMoveTime.setOffset(10);
         
@@ -224,11 +176,9 @@ public class TestRuntime extends GameRuntime implements Serializable {
 	        fspeed = speed * accel;
         }
 
+        double elapsed = GameTime.getElapsed();
         mStage.origin.y += elapsed * fspeed;
         player.coord.y += elapsed * fspeed;
-
-        Log.w("parallax", "stage.origin.y" + mStage.origin.y);
-        Log.w("parallax", "player.coord.y" + player.coord.y);
         
         player.update(gameState);
         
@@ -294,6 +244,7 @@ public class TestRuntime extends GameRuntime implements Serializable {
 
         player.setCrash(crashed());
 
+        // TODO: may be its enough test test sprites.isEmpty()
         if ( rebuildSpriteList ) buildSpriteList();
 	    Collections.sort(sprites);
 
@@ -395,4 +346,14 @@ public class TestRuntime extends GameRuntime implements Serializable {
 		}
 		return false;
 	}
+
+    public void pause() {
+    	GameTime.stop();
+    	super.pause();
+    }
+
+    public void unpause() {
+    	super.unpause();
+    	GameTime.resume();
+    }
 }

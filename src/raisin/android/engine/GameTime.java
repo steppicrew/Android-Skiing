@@ -3,7 +3,6 @@
  */
 package raisin.android.engine;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +10,33 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class GameTime implements Serializable {
 	
-	public static GameTime master= new GameTime(true);
+	public static GameTime master= new GameTime();
 	public static List<GameTime> instances= new ArrayList<GameTime>();
 
+	private long mLastTime;
+	
 	public static void reset() {
 		instances.clear();
 	}
+
+	public static void register(GameTime gameTime) {
+		instances.add(gameTime);
+	}
 	
-	public static GameTime newInstance() {
-		GameTime instance= new GameTime(false);
-		return instance;
+	public static void unregister(GameTime gameTime) {
+		instances.remove(gameTime);
 	}
 	
 	public static void stop() {
 		for ( GameTime instance: instances ) instance.mLastTime -= master.mLastTime;
 		master.mLastTime= 0;
+	}
+
+	public static void resume() {
+		if ( master.mLastTime > 0 ) return;
+
+		master.mLastTime= now();
+		for ( GameTime instance: instances ) instance.mLastTime += master.mLastTime;
 	}
 
     private static final long now() {
@@ -42,7 +53,7 @@ public class GameTime implements Serializable {
         	master.mLastTime= nowTime;
 
         	// Wenn mLastTime 0 ist, enthalten folgende Zeitvariablen
-        	// relative Werte und m�ssen angepasst werden
+        	// relative Werte und muessen angepasst werden
     		for ( GameTime instance: instances ) instance.mLastTime += master.mLastTime;
         }
 		
@@ -50,23 +61,6 @@ public class GameTime implements Serializable {
 		master.mLastTime= nowTime;
         return elapsed;
 	}
-
-	@SuppressWarnings("unused")
-	private transient boolean isMaster;
-	private long mLastTime;
-
-	private GameTime( boolean isMaster ) {
-		this.isMaster= isMaster;
-	}
-
-    public void writeToStream(java.io.ObjectOutputStream out) throws IOException {
-    	out.writeLong(mLastTime);
-    }
-
-    public void readFromStream(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-    	long savedTime= in.readLong();
-    	mLastTime= master.mLastTime + savedTime;
-    }
 
 	public void setOffset( long offset ) {
 		mLastTime= master.mLastTime + offset;

@@ -39,10 +39,9 @@ class Tree extends Sprite {
 	@Override
 	public void init( StageData stageData ) {
 		super.init(stageData);
-		dimension= Cube.CubeByHotspotDimension(
-			new Point3d(100, 25, 0), // hotspot
-			new Point3d(200, 50, 200) // dimension
-		);
+		Point3d dim= new Point3d(50, 50, 200); // dimension
+		Point3d hotSpot= new Point3d(dim).scaleBy(.5, .5, 0); // hotspot
+		dimension= Cube.CubeByHotspotDimension(hotSpot, dim);
 		hotCube= (new Cube(dimension)).scaleBy(0.25d, 0.25d, 1);
 	}
 	

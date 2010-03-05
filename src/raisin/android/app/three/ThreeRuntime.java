@@ -1,6 +1,5 @@
 package raisin.android.app.three;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import raisin.android.engine.GameRuntime;
@@ -22,15 +21,6 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
     	super.init(context);
     }
     
-    // TODO: super() fuer mStage
-    protected final void writeObject(java.io.ObjectOutputStream out) throws IOException {
-    	super.writeObject(out);
-    }
-
-    protected final void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        super.readObject(in);
-    }
-
     private void fixContent() {
     }
     

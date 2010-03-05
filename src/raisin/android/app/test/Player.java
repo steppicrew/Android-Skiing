@@ -46,10 +46,10 @@ class Player extends Sprite {
 	Player( StageData stageData ) {
 		super(stageData);
 		coord= new Point3d(-1, 50, 0);
-		dimension= Cube.CubeByHotspotDimension(
-			new Point3d(25, 15, 0), // hotspot
-			new Point3d(50, 30, 180) // dimension
-		);
+
+		Point3d dim= new Point3d(50, 30, 180); // dimension
+		Point3d hotSpot= new Point3d(dim).scaleBy(.5, .5, 0); // hotspot
+		dimension= Cube.CubeByHotspotDimension(hotSpot, dim);
 		hotCube= (new Cube(dimension)).scaleBy(0.25d, 0.25d, 1);
 	}
 

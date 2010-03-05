@@ -137,9 +137,11 @@ public class GameView extends SurfaceView
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
+		if ( event.getAction() != MotionEvent.ACTION_DOWN ) return false;
+	
 		if ( thread == null ) Log.e("onTouch", "Thread is NULL!");
 		if ( thread != null ) {
-			thread.unpause();
+			thread.togglePause();
 			return true;
 		}
 		return false;

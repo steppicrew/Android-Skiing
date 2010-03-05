@@ -95,6 +95,14 @@ public class GameThread extends Thread {
     	Log.w("GameThread", "unpause end");
     }
 
+    public void togglePause() {
+    	Log.w("GameThread", "unpause start");
+        synchronized (mSurfaceHolder) {
+        	mGameRuntime.togglePause();
+        }
+    	Log.w("GameThread", "unpause end");
+    }
+
 	public boolean handleKeyEvent(View v, int keyCode, KeyEvent event) {
         synchronized (mSurfaceHolder) {
         	return mGameRuntime.handleKeyEvent(v, keyCode, event);
