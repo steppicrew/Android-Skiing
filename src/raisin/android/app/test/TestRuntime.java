@@ -108,9 +108,37 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
         fspeed= 0;
     	rebuildSpriteList= true;
     }
+    
+    public void restartThaw() {
+    	mStage= new StageData();
+        sprites= new ArrayList<Sprite>();
+        mTrees= new ArrayList<Tree>();
+
+    	player= new Player(mStage);
+    	
+    	GameTime.reset();
+        mPlayerLastMoveTime= GameTime.newInstance();
+        mNextTreeTime= GameTime.newInstance();
+        mCrashUntilTime= GameTime.newInstance();
+
+        lifes= 5;
+    	mStage.origin.y= 0;
+    	score= 0;
+
+        accel= 0;
+        fspeed= 0;
+    	rebuildSpriteList= true;
+    }
+    @Override
+    protected void initThaw() {
+    	super.initThaw();
+        restart();
+    	for ( Tree tree: mTrees ) tree.init(mStage);
+    	player.init(mStage);
+    }
 
     // TODO: super() fuer mStage
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void XwriteObject(java.io.ObjectOutputStream out) throws IOException {
     	out.writeInt(gameState.ordinal());
     	out.writeInt(lifes);
     	out.writeDouble(mStage.origin.y);
@@ -124,7 +152,7 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
     	for ( Tree tree: mTrees ) out.writeObject(tree);
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void XreadObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         restart();
     	gameState= GameRuntime.GameState.values()[in.readInt()];
     	lifes= in.readInt();

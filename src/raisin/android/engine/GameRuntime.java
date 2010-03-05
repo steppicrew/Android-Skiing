@@ -63,6 +63,7 @@ public abstract class GameRuntime implements Serializable {
     		ByteArrayInputStream bais= new ByteArrayInputStream(baos.toByteArray());
     		ObjectInputStream ois= new ObjectInputStream(bais);
     		GameRuntime instance= (GameRuntime) ois.readObject();
+    		instance.initThaw();
     		instance.init(context);
     		ois.close();
             return instance;
@@ -79,6 +80,10 @@ public abstract class GameRuntime implements Serializable {
 	
     public void init( Context context ) {
     	mContext= context;
+    }
+    
+    protected void initThaw() {
+    	// may be overwritten
     }
     
     // Check Integrity
