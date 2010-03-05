@@ -10,25 +10,22 @@ import java.util.List;
 import raisin.android.R;
 import raisin.android.engine.GameRuntime;
 import raisin.android.engine.GameTime;
+import raisin.android.engine.StageData;
 import raisin.android.engine.math.Cube;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
-import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 @SuppressWarnings("serial")
-public class TestRuntime extends GameRuntime implements SensorEventListener, Serializable {
+public class TestRuntime extends GameRuntime implements Serializable {
 
 	private static final int MAX_TREES= 8;
 
@@ -58,9 +55,6 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
 
 	private transient List<Sprite> sprites= new ArrayList<Sprite>();
 
-    private transient SensorManager mSensorManager;
-	private transient Sensor mSensor;
-	
     private transient Bitmap mBackgroundImage;
 
 	private transient Paint mScoreTextPaint;
@@ -72,30 +66,14 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
     }
 
     @Override
-    public void init( Context context ) {
-    	super.init(context);
-    	mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-    	List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
-    	if ( sensors.size() > 0 ) {
-    		mSensor= sensors.get(0);
-    		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
-    	}
-    	else {
-    		mSensorManager= null;
-    	}
-    }
-    
-    @Override
     public void restart() {
     	super.restart();
 
-    	mStage= new StageData();
         sprites= new ArrayList<Sprite>();
         mTrees= new ArrayList<Tree>();
 
     	player= new Player(mStage);
     	
-    	GameTime.reset();
         mPlayerLastMoveTime= GameTime.newInstance();
         mNextTreeTime= GameTime.newInstance();
         mCrashUntilTime= GameTime.newInstance();
@@ -138,10 +116,10 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
     }
 
     // TODO: super() fuer mStage
-    private void XwriteObject(java.io.ObjectOutputStream out) throws IOException {
-    	out.writeInt(gameState.ordinal());
-    	out.writeInt(lifes);
-    	out.writeDouble(mStage.origin.y);
+    protected final void XwriteObject(java.io.ObjectOutputStream out) throws IOException {
+        super.writeObject(out);
+
+        out.writeInt(lifes);
     	out.writeDouble(score);
     	mNextTreeTime.writeToStream(out);
     	mCrashUntilTime.writeToStream(out);
@@ -153,10 +131,9 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
     }
 
     private void XreadObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        restart();
-    	gameState= GameRuntime.GameState.values()[in.readInt()];
-    	lifes= in.readInt();
-    	mStage.origin.y= in.readDouble();
+        super.readObject(in);
+
+        lifes= in.readInt();
     	score= in.readDouble();
         mNextTreeTime.readFromStream(in);
         mCrashUntilTime.readFromStream(in);
@@ -348,32 +325,11 @@ public class TestRuntime extends GameRuntime implements SensorEventListener, Ser
     }
 
 	@Override
-	public void onAccuracyChanged( Sensor sensor, int accuracy ) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onSensorChanged( SensorEvent event ) {
-		// if ( event.values.length > 0 ) Log.w("Sensor 0", "" + event.values[0]);
-		// if ( event.values.length > 1 ) Log.w("Sensor 1", "" + event.values[1]);
-		// if ( event.values.length > 2 ) Log.w("Sensor 2", "" + event.values[2]);
-
-		if ( event.values.length > 2 ) {
-			playerMoveX= mStage.mCanvasHeight > mStage.mCanvasWidth ? -event.values[2] : -event.values[1];
-			playerMoveY= mStage.mCanvasHeight > mStage.mCanvasWidth ? -event.values[1] : event.values[2];
-		}
+	public void doOnSensorChanged( SensorEvent event ) {
+		playerMoveX= mStage.mCanvasHeight > mStage.mCanvasWidth ? -event.values[2] : -event.values[1];
+		playerMoveY= mStage.mCanvasHeight > mStage.mCanvasWidth ? -event.values[1] : event.values[2];
 	}
     
-    @Override
-    public void destroy() {
-    	super.destroy();
-    	if ( mSensorManager != null ) {
-    		mSensorManager.unregisterListener(this, mSensor);
-    	}
-    		// if (mMode == STATE_RUNNING) setState(STATE_PAUSE);
-    }
-
     public void skipToNextState() {
 		if ( gameState == GameState.INTRO ) setState(GameState.RUNNING);
 		else if ( gameState == GameState.RUNNING ) setState(GameState.PAUSE);

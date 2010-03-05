@@ -5,6 +5,7 @@ package raisin.android.app.test;
 
 import raisin.android.R;
 import raisin.android.engine.GameRuntime;
+import raisin.android.engine.StageData;
 import raisin.android.engine.math.Cube;
 import raisin.android.engine.math.Point3d;
 import android.content.Context;
