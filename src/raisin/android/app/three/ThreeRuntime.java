@@ -2,12 +2,18 @@ package raisin.android.app.three;
 
 import java.io.Serializable;
 
-import raisin.android.engine.GameRuntime;
-import raisin.android.engine.GameTime;
+import raisin.android.engine2.GameRuntime;
+import raisin.android.engine2.GameTime;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.hardware.SensorEvent;
+
+import android.app.Activity;
+import android.opengl.GLSurfaceView;
+import android.os.Bundle;
 
 @SuppressWarnings("serial")
 public class ThreeRuntime extends GameRuntime implements Serializable {
@@ -16,12 +22,19 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
     	restart();
     }
 
+    Paint mGreen;
+    
     @Override
     public void init( Context context ) {
     	super.init(context);
     }
     
     private void fixContent() {
+    	if ( mGreen == null ) {
+        	
+	        mGreen= new Paint();
+	        mGreen.setColor(Color.GREEN);
+    	}
     }
     
     private void update() {
@@ -33,6 +46,10 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
     }
 
     private void draw( Canvas canvas ) {
+    	
+    	int x= GameRuntime.random.nextInt(100);
+    	int y= GameRuntime.random.nextInt(100);
+    	canvas.drawPoint(x, y, mGreen);
     }
 
     @Override
@@ -46,8 +63,8 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
     }
 
 	@Override
-	public void doOnSensorChanged( SensorEvent event ) {
-	}
+	// public void doOnSensorChanged( SensorEvent event ) {
+	// }
     
     public void skipToNextState() {
 		if ( gameState == GameState.INTRO ) setState(GameState.RUNNING);

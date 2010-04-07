@@ -1,11 +1,13 @@
-package raisin.android.engine;
+package raisin.android.engine2;
 
 import raisin.android.R;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.Window;
 
 public abstract class GameActivity extends Activity {
@@ -28,14 +30,22 @@ public abstract class GameActivity extends Activity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setContentView(R.layout.test);
+        // setContentView(R.layout.test);
+
+        SurfaceView view= initView();
         
-        mGameView = (GameView) findViewById(R.id.testSurface);
+        mGameView = new GameView(view, this);
+
+        // setContentView(view);
+
+        // mGameView = (GameView) findViewById(R.id.surface);
+
         mGameView.setGameRuntime(createGameRuntime());
 
         // mGameThread = mGameView.getThread();
     }
 
+	protected abstract SurfaceView initView();
 	protected abstract GameRuntime createGameRuntime();
 
     /* Creates the menu items */

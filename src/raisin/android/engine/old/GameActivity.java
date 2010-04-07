@@ -31,7 +31,7 @@ public class GameActivity extends Activity {
         setContentView(R.layout.main);
         
         // get handles to the LunarView from XML, and its LunarThread
-        mGameView = (GameView) findViewById(R.id.surface);
+        mGameView = (GameView) findViewById(R.id.mainSurface);
         // mGameThread = mGameView.getThread();
     }
 

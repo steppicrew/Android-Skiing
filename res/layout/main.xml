@@ -5,7 +5,7 @@
 >
 
     <raisin.android.engine.old.GameView
-        android:id="@+id/surface"
+        android:id="@+id/mainSurface"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
     />
