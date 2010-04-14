@@ -66,8 +66,15 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".app.three.TriangleActivity" android:label="Triangle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.TEST" />
+            </intent-filter>
+        </activity>
+
     </application>
 
-    <uses-sdk android:targetSdkVersion="7" android:minSdkVersion="6"/>
+    <uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7"/>
 
 </manifest> 
