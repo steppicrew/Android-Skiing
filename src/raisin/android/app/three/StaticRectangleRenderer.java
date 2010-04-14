@@ -34,6 +34,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES10;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -103,6 +104,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 		private float driftx;
 		private float jitterx;
 		private float jittery;
+		private float angleSpeed;
 
 		public Snowflake(int[] textureIDs) {
 			rectangle= new Rectangle();
@@ -116,6 +118,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 			posz= 0.5f + random.nextPlusMinus(0.5f);
 			driftx= random.nextPlusMinus(0.0001f);
 			speed= 0.0003f + random.nextFloat() * 0.0003f;
+			angleSpeed= random.nextPlusMinus(0.090f);
 		}
 
 //		private long rnd;
@@ -151,16 +154,21 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        float y= 2f - diff * speed + jittery;
 	        float z= posz;
 	        
-	        glTranslatef(x, y, z);
+//	        glTranslatef(x, y, z);
 
-	        float angle = 0.090f * diff;
+	        float angle = angleSpeed * diff;
 	        glRotatef(angle, 0, 0, 1.0f);
-
+	        
 	        float scale= 0.3f * (1 - z);
-	        glScalef(scale, scale, 1f);
-
+//	        glScalef(scale, scale, 1f);
+	        
 	        rectangle.draw(gl);
 
+	        glEnable(GL_BLEND);
+	        
+	        
+	        
+	        
 	        glPopMatrix();
 
 	        //float y= 2f-diff*speed;
@@ -254,7 +262,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
 	        bitmap.recycle();
         }
-        for ( int i= 0; i < 10; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
+        for ( int i= 0; i < 1; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
     }
 
     public void onDrawFrame(GL10 gl) {
