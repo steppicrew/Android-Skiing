@@ -140,8 +140,8 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        
 	        glTranslatef(x, y, z);
 
-	        // float angle = 0; // 0.090f * diff;
-	        // glRotatef(angle, 0, 0, 1.0f);
+	        float angle = 0.090f * diff;
+	        glRotatef(angle, 0, 0, 1.0f);
 
 	        float scale= 0.3f * (1 - z);
 	        glScalef(scale, scale, 1f);
@@ -170,7 +170,17 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         // mRectangle = new Rectangle();
         // snowflake= new Snowflake();
 
-        for ( int i= 0; i < 100; i++ ) snowflakes.add(new Snowflake());
+        for ( int i= 0; i < 10; i++ ) snowflakes.add(new Snowflake());
+    }
+    
+    private final static int SNOWFLAKE_COUNT = 3;
+    private int SnowflakeResource(int num) {
+    	switch (num) {
+    	case 0: return R.drawable.snowflake1;
+    	case 1: return R.drawable.snowflake2;
+    	case 2: return R.drawable.snowflake3;
+    	}
+    	throw new Exception("Snowflake index out of range!");
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -200,40 +210,42 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
          * surface is created.
          */
 
-        int[] textures = new int[1];
-        glGenTextures(1, textures, 0);
+        int[] textures = new int[SNOWFLAKE_COUNT];
+        glGenTextures(SNOWFLAKE_COUNT, textures, 0);
 
-        mTextureID = textures[0];
-        glBindTexture(GL_TEXTURE_2D, mTextureID);
-
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  // was GL_NEAREST
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-        
-        
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.5f);
-
-        InputStream is = mContext.getResources()
-                .openRawResource(R.drawable.snowflake1);
-        Bitmap bitmap;
-        try {
-            bitmap = BitmapFactory.decodeStream(is);
-        } finally {
-            try {
-                is.close();
-            } catch(IOException e) {
-                // Ignore.
-            }
+        for (int i= 0; i < SNOWFLAKE_COUNT; i++) {
+	        mTextureID = textures[i];
+	        glBindTexture(GL_TEXTURE_2D, mTextureID);
+	
+	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  // was GL_NEAREST
+	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	
+	        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	
+	        
+	        
+	        glEnable(GL_ALPHA_TEST);
+	        glAlphaFunc(GL_GREATER, 0.5f);
+	
+	        InputStream is = mContext.getResources()
+	                .openRawResource(R.drawable.snowflake1);
+	        Bitmap bitmap;
+	        try {
+	            bitmap = BitmapFactory.decodeStream(is);
+	        } finally {
+	            try {
+	                is.close();
+	            } catch(IOException e) {
+	                // Ignore.
+	            }
+	        }
+	
+	        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
+	        bitmap.recycle();
         }
-
-        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
-        bitmap.recycle();
     }
 
     public void onDrawFrame(GL10 gl) {
