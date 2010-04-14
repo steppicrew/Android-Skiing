@@ -14,10 +14,16 @@ import android.hardware.SensorEvent;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 
 @SuppressWarnings("serial")
 public class ThreeRuntime extends GameRuntime implements Serializable {
 
+	public static boolean horizontalOrientation;	// wird zzt in StaticRectangleRenderer gesetzt
+	public static float orientationX;
+	public static int screenWidth;					// wird zzt in StaticRectangleRenderer gesetzt
+	public static int screenHeight;					// wird zzt in StaticRectangleRenderer gesetzt
+	
     public ThreeRuntime() {
     	restart();
     }
@@ -63,8 +69,13 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
     }
 
 	@Override
-	// public void doOnSensorChanged( SensorEvent event ) {
-	// }
+	public void onSensorChanged( SensorEvent event ) {
+		if ( event.values.length > 0 ) Log.w("Sensor 0", "" + event.values[0]);
+		if ( event.values.length > 1 ) Log.w("Sensor 1", "" + event.values[1]);
+		if ( event.values.length > 2 ) Log.w("Sensor 2", "" + event.values[2]);
+
+		orientationX= horizontalOrientation ? event.values[1] : event.values[2];
+	}
     
     public void skipToNextState() {
 		if ( gameState == GameState.INTRO ) setState(GameState.RUNNING);

@@ -165,7 +165,6 @@ public class TriangleRenderer implements GLSurfaceView.Renderer {
         gl.glMatrixMode(GL10.GL_PROJECTION);
         gl.glLoadIdentity();
         gl.glFrustumf(-ratio, ratio, -1, 1, 3, 7);
-
     }
 
     private Context mContext;

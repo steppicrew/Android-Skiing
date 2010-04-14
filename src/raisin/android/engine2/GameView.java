@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.TextView;
@@ -126,7 +127,7 @@ public class GameView
     	List<Sensor> sensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
     	if ( sensors.size() > 0 ) {
     		mSensor= sensors.get(0);
-    		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    		mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
     	}
     	else {
     		mSensorManager= null;

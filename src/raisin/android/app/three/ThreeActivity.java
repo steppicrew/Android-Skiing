@@ -1,8 +1,11 @@
 package raisin.android.app.three;
 
+import java.util.HashMap;
+
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+// import android.view.WindowOrientationEventListener;
 import android.view.SurfaceView;
 import raisin.android.R;
 import raisin.android.engine2.GameActivity;
@@ -10,6 +13,25 @@ import raisin.android.engine2.GameRuntime;
 
 public class ThreeActivity extends GameActivity {
 
+//    WindowOrientationEventListener orientationEventListener;
+
+//    public int orientation= OrientationEventListener.ORIENTATION_UNKNOWN;
+    
+    public ThreeActivity() {
+    	super();
+    	
+/*
+        orientationEventListener= new OrientationEventListener(this) {
+
+			
+			@Override
+			public void onOrientationChanged(int orientation_) {
+				orientation= orientation_;
+			}
+		};
+*/
+    }
+    
 	class View2 extends SurfaceView {
 
 		public View2(Context context) {
@@ -49,7 +71,7 @@ public class ThreeActivity extends GameActivity {
 	        // super.onCreate(savedInstanceState);
 	        mGLView = new GLSurfaceView(this);
 	        mGLView.setEGLConfigChooser(false);
-	        mGLView.setRenderer(new StaticTriangleRenderer(this));
+	        mGLView.setRenderer(new StaticRectangleRenderer(this));
 	
 	        setContentView(mGLView);
 	
