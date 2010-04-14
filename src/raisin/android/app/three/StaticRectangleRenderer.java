@@ -89,7 +89,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	static XORShiftRandom random= new XORShiftRandom();
 
     private Context mContext;
-    private final static int SNOWFLAKE_COUNT = 3;
+    private final static int SNOWFLAKE_COUNT = 4;
     private int[] mTextureIDs= new int[SNOWFLAKE_COUNT];
 
 	static class Snowflake {
@@ -100,6 +100,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 		private long started;
 		private Rectangle rectangle;
 		private int textureID;
+		private int blendID;
 		private boolean finished;
 		private float driftx;
 		private float jitterx;
@@ -108,7 +109,8 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
 		public Snowflake(int[] textureIDs) {
 			rectangle= new Rectangle();
-			textureID= textureIDs[random.nextInt(textureIDs.length)];
+			textureID= textureIDs[1]; //random.nextInt(textureIDs.length)];
+			blendID= textureIDs[3];
 			restart();
 		}
 		
@@ -166,7 +168,14 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
 	        glEnable(GL_BLEND);
 	        
+	        glBlendFunc(GL_SRC_ALPHA,
+	        		GL_ONE_MINUS_SRC_ALPHA);
 	        
+            glBindTexture(GL_TEXTURE_2D, blendID);
+            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+            rectangle.draw(gl);
 	        
 	        
 	        glPopMatrix();
@@ -198,6 +207,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
     	default: return R.drawable.snowflake1;
     	case 1: return R.drawable.snowflake2;
     	case 2: return R.drawable.snowflake3;
+    	case 3: return R.drawable.btow_strip_alpha;
     	}
     }
 
