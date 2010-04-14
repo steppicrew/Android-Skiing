@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 
 import android.app.Activity;
@@ -21,6 +22,7 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
 
 	public static boolean horizontalOrientation;	// wird zzt in StaticRectangleRenderer gesetzt
 	public static float orientationX;
+	public static float orientationY;
 	public static int screenWidth;					// wird zzt in StaticRectangleRenderer gesetzt
 	public static int screenHeight;					// wird zzt in StaticRectangleRenderer gesetzt
 	
@@ -70,11 +72,11 @@ public class ThreeRuntime extends GameRuntime implements Serializable {
 
 	@Override
 	public void onSensorChanged( SensorEvent event ) {
-		if ( event.values.length > 0 ) Log.w("Sensor 0", "" + event.values[0]);
-		if ( event.values.length > 1 ) Log.w("Sensor 1", "" + event.values[1]);
-		if ( event.values.length > 2 ) Log.w("Sensor 2", "" + event.values[2]);
-
-		orientationX= horizontalOrientation ? event.values[1] : event.values[2];
+		
+		if ( event.sensor.getType() == Sensor.TYPE_ORIENTATION ) {
+			orientationX= horizontalOrientation ? event.values[1] : event.values[2];
+			orientationY= horizontalOrientation ? event.values[2] : event.values[1];
+		}
 	}
     
     public void skipToNextState() {

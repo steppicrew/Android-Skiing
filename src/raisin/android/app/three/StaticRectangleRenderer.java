@@ -53,6 +53,12 @@ import raisin.android.R;
  */
 public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
+	static private float clamp(float value, float low, float high) {
+		if ( value < low ) return low;
+		if ( value > high ) return high;
+		return value;
+	}
+	
 	@SuppressWarnings("serial")
 	static class XORShiftRandom extends Random {
 		private long seed = System.nanoTime();
@@ -267,14 +273,12 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        float eyex= (float) Math.sin(SystemClock.uptimeMillis() / 1000f);
+        // float eyex= (float) Math.sin(SystemClock.uptimeMillis() / 1000f);
         
-        eyex= ThreeRuntime.orientationX / -10f;
-        if ( eyex < -2f ) eyex= -2f;
-        if ( eyex > 2f )  eyex= 2f;
+        float eyex= clamp(ThreeRuntime.orientationX / -10f, -3f, 3f);
+        float eyey= clamp(ThreeRuntime.orientationY / -10f, -2f, 2f);
         
-        
-        GLU.gluLookAt(gl, eyex, 0, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        GLU.gluLookAt(gl, eyex, eyey, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);

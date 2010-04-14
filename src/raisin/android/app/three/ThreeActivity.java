@@ -7,7 +7,6 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 // import android.view.WindowOrientationEventListener;
 import android.view.SurfaceView;
-import raisin.android.R;
 import raisin.android.engine2.GameActivity;
 import raisin.android.engine2.GameRuntime;
 
