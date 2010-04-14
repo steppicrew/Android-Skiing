@@ -82,22 +82,25 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	static XORShiftRandom random= new XORShiftRandom();
 
     private Context mContext;
-    private int mTextureID;
+    private final static int SNOWFLAKE_COUNT = 3;
+    private int[] mTextureIDs= new int[SNOWFLAKE_COUNT];
 
 	static class Snowflake {
 		private float posx;
-		private float posy;
+//		private float posy;
 		private float posz;
 		private float speed;
 		private long started;
 		private Rectangle rectangle;
+		private int textureID;
 		private boolean finished;
 		private float driftx;
 		private float jitterx;
 		private float jittery;
 
-		public Snowflake() {
+		public Snowflake(int[] textureIDs) {
 			rectangle= new Rectangle();
+			textureID= textureIDs[random.nextInt(textureIDs.length)];
 			restart();
 		}
 		
@@ -127,7 +130,11 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
 		public void draw(GL10 gl) {
 
-	        long diff = SystemClock.uptimeMillis() - started;
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+            long diff = SystemClock.uptimeMillis() - started;
 
 	        glPushMatrix();
 
@@ -170,17 +177,14 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         // mRectangle = new Rectangle();
         // snowflake= new Snowflake();
 
-        for ( int i= 0; i < 10; i++ ) snowflakes.add(new Snowflake());
     }
     
-    private final static int SNOWFLAKE_COUNT = 3;
     private int SnowflakeResource(int num) {
     	switch (num) {
-    	case 0: return R.drawable.snowflake1;
+    	default: return R.drawable.snowflake1;
     	case 1: return R.drawable.snowflake2;
     	case 2: return R.drawable.snowflake3;
     	}
-    	throw new Exception("Snowflake index out of range!");
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -210,12 +214,10 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
          * surface is created.
          */
 
-        int[] textures = new int[SNOWFLAKE_COUNT];
-        glGenTextures(SNOWFLAKE_COUNT, textures, 0);
+        glGenTextures(SNOWFLAKE_COUNT, mTextureIDs, 0);
 
         for (int i= 0; i < SNOWFLAKE_COUNT; i++) {
-	        mTextureID = textures[i];
-	        glBindTexture(GL_TEXTURE_2D, mTextureID);
+	        glBindTexture(GL_TEXTURE_2D, mTextureIDs[i]);
 	
 	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  // was GL_NEAREST
 	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -231,7 +233,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        glAlphaFunc(GL_GREATER, 0.5f);
 	
 	        InputStream is = mContext.getResources()
-	                .openRawResource(R.drawable.snowflake1);
+	                .openRawResource(SnowflakeResource(i));
 	        Bitmap bitmap;
 	        try {
 	            bitmap = BitmapFactory.decodeStream(is);
@@ -246,6 +248,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
 	        bitmap.recycle();
         }
+        for ( int i= 0; i < 10; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
     }
 
     public void onDrawFrame(GL10 gl) {
@@ -292,9 +295,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, mTextureID);
-        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 /*
         for ( Snowflake snowflake: snowflakes ) {
         	snowflake.draw(gl);
