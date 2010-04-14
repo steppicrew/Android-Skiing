@@ -187,7 +187,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	
     public StaticRectangleRenderer(Context context) {
         mContext = context;
-        
+
         // mRectangle = new Rectangle();
         // snowflake= new Snowflake();
 
@@ -299,7 +299,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         // float eyex= (float) Math.sin(SystemClock.uptimeMillis() / 1000f);
         
         float eyex= clamp(ThreeRuntime.orientationX / -10f, -3f, 3f);
-        float eyey= clamp(ThreeRuntime.orientationY / -10f, -2f, 2f);
+        float eyey= clamp(ThreeRuntime.orientationY / -20f, -1f, 1f);
         
         GLU.gluLookAt(gl, eyex, eyey, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
@@ -308,12 +308,6 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
         glActiveTexture(GL_TEXTURE0);
 
-/*
-        for ( Snowflake snowflake: snowflakes ) {
-        	snowflake.draw(gl);
-        	if ( snowflake.finished() ) snowflake.restart();
-        } */
-        
         for ( int i= 0; i < snowflakes.size(); i++ ) {
         	snowflakes.get(i).draw(gl);
         	if ( snowflakes.get(i).finished() ) snowflakes.get(i).restart();
@@ -393,6 +387,8 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
             mFVertexBuffer.position(0);
             mTexBuffer.position(0);
             mIndexBuffer.position(0);
+
+            
         }
 
         public void draw(GL10 gl) {
