@@ -30,12 +30,11 @@ import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES11;
+import android.opengl.GLES10;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -95,8 +94,8 @@ public class RectangleRenderer implements GLSurfaceView.Renderer {
 	private Context mContext;
 
 	private final static int[] SNOWFLAKE_TEXTURE_RESOURCES = {
-			R.drawable.snowflake1, R.drawable.snowflake2,
-			R.drawable.snowflake3, };
+		R.drawable.snowflake1, R.drawable.snowflake2,
+		R.drawable.snowflake3, };
 	private int[] mSnowflakeTextureIDs = new int[SNOWFLAKE_TEXTURE_RESOURCES.length];
 
 	private final static int[] MISC_TEXTURE_RESOURCES = {};

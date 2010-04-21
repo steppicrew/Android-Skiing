@@ -16,6 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
 
         <!-- Activity Samples -->
 
@@ -72,6 +73,13 @@
         </activity>
 
         <activity android:name=".app.three.TriangleActivity" android:label="Triangle">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.TEST" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".app.AndroidGL.GLActivity" android:label="Android GL">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.TEST" />
