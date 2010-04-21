@@ -16,7 +16,8 @@
 
 package raisin.android.app.three;
 
-import static android.opengl.GLES10.*;
+import static android.opengl.GLES11.*;
+import static android.opengl.GLES11Ext.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,12 +30,13 @@ import java.util.List;
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL11;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.opengl.GLES10;
+import android.opengl.GLES11;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
@@ -141,9 +143,108 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
 		public void draw(GL10 gl) {
 
+/*
+	        glActiveTexture(GL_TEXTURE0);
+
+
             glBindTexture(GL_TEXTURE_2D, textureID);
-            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	        glDisable(GL_ALPHA_TEST);
+
+	        glActiveTexture(GL_TEXTURE1);
+
+            glBindTexture(GL_TEXTURE_2D, blendID);
+
+//	        glEnable(GL_BLEND);
+//	        glBlendFunc(GL_SRC_ALPHA,
+//	        		GL_ONE_MINUS_SRC_ALPHA);
+
+*/
+
+//            glActiveTexture(GL_TEXTURE0);
+//            glBindTexture(GL_TEXTURE_2D, textureID);
+
+//	        glEnable(GL_ALPHA_TEST);
+//	        glAlphaFunc(GL_GREATER, 0.1f);
+
+//            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+            //------------------------
+
+            glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+	        glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, blendID);
+            
+            
+            // http://www.gamedev.net/community/forums/topic.asp?topic_id=462270
+            // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+            //glEnable(GL_BLEND);
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+            glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+
+            
+	        glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, blendID);
+            
+            // http://www.gamedev.net/community/forums/topic.asp?topic_id=462270
+            // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+            //glEnable(GL_BLEND);
+            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
+
+
+//	        glEnable(GL_ALPHA_TEST);
+//	        glAlphaFunc(GL_GREATER, 0.1f);
+
+
+//	        glActiveTexture(GL_TEXTURE0);
+//	        glActiveTexture(GL_TEXTURE1);
+
+/*
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+            
+            // Interpolate RGB with RGB
+
+            glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC2_RGB, GL_PREVIOUS);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
+*/
+
+            /*
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+
+            glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+
+            
+            
+
+            // Interpolate ALPHA with ALPHA
+            glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
+            glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_TEXTURE);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
+            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+*/
+            
+            
+            
+//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
             long diff = SystemClock.uptimeMillis() - started;
 
@@ -166,16 +267,12 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        
 	        rectangle.draw(gl);
 
-	        glEnable(GL_BLEND);
 	        
-	        glBlendFunc(GL_SRC_ALPHA,
-	        		GL_ONE_MINUS_SRC_ALPHA);
-	        
-            glBindTexture(GL_TEXTURE_2D, blendID);
-            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//            glBindTexture(GL_TEXTURE_2D, blendID);
+//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-            rectangle.draw(gl);
+//            rectangle.draw(gl);
 	        
 	        
 	        glPopMatrix();
@@ -207,7 +304,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
     	default: return R.drawable.snowflake1;
     	case 1: return R.drawable.snowflake2;
     	case 2: return R.drawable.snowflake3;
-    	case 3: return R.drawable.btow_strip_alpha;
+    	case 3: return R.drawable.plants03;
     	}
     }
 
@@ -249,12 +346,15 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	
-	        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	
+//	        if ( i == SNOWFLAKE_COUNT - 1 ) {
+//	        	glTexEnvx( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD );
+//	        }
+//	        else {
+	        	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+//	        }
 	        
-	        
-	        glEnable(GL_ALPHA_TEST);
-	        glAlphaFunc(GL_GREATER, 0.5f);
+//	        glEnable(GL_ALPHA_TEST);
+//	        glAlphaFunc(GL_GREATER, 0.5f);
 	
 	        InputStream is = mContext.getResources()
 	                .openRawResource(SnowflakeResource(i));
@@ -288,8 +388,8 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         
         // http://www.gamedev.net/community/forums/topic.asp?topic_id=462270
         // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
-        // glEnable(GL_BLEND);
-        // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         /*
          * Usually, the first thing one might want to do is to clear
