@@ -64,6 +64,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".app.steppi.SteppiActivity" android:label="Steppi">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.TEST" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".app.three.TriangleActivity" android:label="Triangle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
