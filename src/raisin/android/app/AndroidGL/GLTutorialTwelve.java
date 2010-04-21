@@ -1,5 +1,11 @@
 package raisin.android.app.AndroidGL;
 
+import static android.opengl.GLES10.GL_BLEND;
+import static android.opengl.GLES10.GL_ONE_MINUS_SRC_ALPHA;
+import static android.opengl.GLES10.GL_SRC_ALPHA;
+import static android.opengl.GLES10.glBlendFunc;
+import static android.opengl.GLES10.glEnable;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import raisin.android.R;
@@ -37,13 +43,18 @@ public class GLTutorialTwelve extends GLTutorialBase {
 		
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClearColor(0.0f, 0.3f, 0.3f, 0.0f);
 		gl.glClearDepthf(1.0f);
 		
-		gl.glEnable(GL10.GL_CULL_FACE);
+//		gl.glEnable(GL10.GL_CULL_FACE);
 		gl.glShadeModel(GL10.GL_SMOOTH);
 		
-		light_tex = loadTexture(gl, R.drawable.light);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,
+				GL_ONE_MINUS_SRC_ALPHA);
+
+//		light_tex = loadTexture(gl, R.drawable.light);
+		light_tex = loadTexture(gl, R.drawable.snowflake1);
 		block_tex = loadTexture(gl, R.drawable.block);
 	}
 	
@@ -80,11 +91,12 @@ public class GLTutorialTwelve extends GLTutorialBase {
 		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texBuff);
 		
 		gl.glTexEnvx(GL10.GL_TEXTURE_ENV , GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
+
 	
 		drawCube(gl);
 		
-		gl.glActiveTexture(GL10.GL_TEXTURE0); 
-		gl.glClientActiveTexture(GL10.GL_TEXTURE0); 
+//		gl.glActiveTexture(GL10.GL_TEXTURE0); 
+//		gl.glClientActiveTexture(GL10.GL_TEXTURE0); 
 		
 		xrot += 1.0f;
 		yrot += 0.5f;

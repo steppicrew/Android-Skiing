@@ -79,6 +79,7 @@
             </intent-filter>
         </activity>
 
+        <!-- activity android:name=".app.AndroidGL.GLActivity" android:label="Android GL"-->
         <activity android:name=".app.AndroidGL.GLActivity" android:label="Android GL">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
