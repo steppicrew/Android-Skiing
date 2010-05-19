@@ -98,7 +98,7 @@ public class GLTutorialTwelve extends GLTutorialBase {
 		gl.glTexEnvx(GL10.GL_TEXTURE_ENV , GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
 
 	
-		drawCube(gl);
+		drawCube(gl, xrot, yrot);
 		
 //		gl.glActiveTexture(GL10.GL_TEXTURE0); 
 //		gl.glClientActiveTexture(GL10.GL_TEXTURE0); 

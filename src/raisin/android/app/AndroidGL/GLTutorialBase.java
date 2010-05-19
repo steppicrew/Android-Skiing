@@ -9,6 +9,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Hashtable;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -105,7 +108,6 @@ public abstract class GLTutorialBase extends GLSurfaceView implements GLSurfaceV
 						16, 17, 19, 16, 19, 18, 
 						20, 21, 23, 20, 23, 22, 
 												};
-
 
 	FloatBuffer cubeBuff;
 	FloatBuffer texBuff;
@@ -252,14 +254,75 @@ public abstract class GLTutorialBase extends GLSurfaceView implements GLSurfaceV
 	}
 	
 	public void drawCube(GL10 gl) {
-		ByteBuffer indexBuffer = ByteBuffer.allocateDirect(indices.length);
-		indexBuffer.put(indices);
-		indexBuffer.position(0);
+		drawCube(gl, 0, 0);
+	}
 
-		
-		//Draw the vertices as triangles, based on the Index Buffer information
-		gl.glDrawElements(GL10.GL_TRIANGLES, indices.length, GL10.GL_UNSIGNED_BYTE, indexBuffer);
+	public void drawCube(GL10 gl, double xrot, double yrot) {
+		if (false) {
+			ByteBuffer indexBuffer = ByteBuffer.allocateDirect(indices.length);
+			indexBuffer.put(indices);
+			indexBuffer.position(0);
+	
+			
+			//Draw the vertices as triangles, based on the Index Buffer information
+			gl.glDrawElements(GL10.GL_TRIANGLES, indices.length, GL10.GL_UNSIGNED_BYTE, indexBuffer);
+		}
+		else {
+			class Center implements Comparable<Center> {
+				int index;
+				double coords[]= new double[3];
+				public Center(int index) {
+					this.index= index;
+				}
 
+				@Override
+				public int compareTo(Center another) {
+					if (coords[2] < another.coords[2]) return -1;
+					if (coords[2] > another.coords[2]) return  1;
+					return 0;
+				}
+			}
+			Center centers[]= new Center[6];
+
+			int coords_per_side= box.length / 6 / 3;
+			for (int i= 0; i < 6; i++) {
+				centers[i]= new Center(i);
+				for (int j= 0; j < coords_per_side; j++) {
+					for (int k= 0; k < 3; k++) {
+						centers[i].coords[k]+= box[(i * coords_per_side + j) * 3 + k] / coords_per_side;
+					}
+				}
+			}
+
+			double sin_xrot= Math.sin(Math.toRadians(xrot));
+			double cos_xrot= Math.cos(Math.toRadians(xrot));
+			double sin_yrot= Math.sin(Math.toRadians(yrot));
+			double cos_yrot= Math.cos(Math.toRadians(yrot));
+			
+			for (int i= 0; i < 6; i++) {
+				final int x= 0;
+				final int y= 1;
+				final int z= 2;
+				centers[i].coords[y]= centers[i].coords[y] * cos_xrot + centers[i].coords[z] * sin_xrot;
+				centers[i].coords[z]= centers[i].coords[z] * cos_xrot - centers[i].coords[y] * sin_xrot;
+				centers[i].coords[x]= centers[i].coords[x] * cos_yrot + centers[i].coords[z] * sin_yrot;
+				centers[i].coords[z]= centers[i].coords[z] * cos_yrot - centers[i].coords[x] * sin_yrot;
+			}
+			
+			int len= indices.length / 6;
+			ByteBuffer indexBuffer = ByteBuffer.allocateDirect(indices.length);
+			indexBuffer.put(indices);
+			
+			Arrays.sort(centers);
+			
+			centers[0].coords[0]= 1;
+			for (int i= 0; i < 6; i++) {
+				indexBuffer.position(centers[i].index * len);
+				
+				//Draw the vertices as triangles, based on the Index Buffer information
+				gl.glDrawElements(GL10.GL_TRIANGLES, len, GL10.GL_UNSIGNED_BYTE, indexBuffer);
+			}
+		}
 		if (false) {
 			gl.glColor4f(1.0f, 1, 1, 1.0f);
 			gl.glNormal3f(0,0,1);
