@@ -324,14 +324,26 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
             glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer);
             
 
+            float[] coords = {
+                    // X, Y, Z
+                    -0.5f,  0.5f, 0,
+                     0.5f,  0.5f, 0,
+                    -0.5f, -0.5f, 0,
+                     0.5f, -0.5f, 0
+            };
 
+            for (int i = 0; i < 4; i++) {
+                for(int j = 0; j < 2; j++) {
+                    rectangle.mTexBuffer2.put(coords[i*3+j] * 1.0f + 0.5f);
+                }
+            }
 
 	        glActiveTexture(GL_TEXTURE1);
 	        gl.glClientActiveTexture(GL10.GL_TEXTURE1); 
 	        glEnable(GL_TEXTURE_2D);
             gl.glBindTexture(GL10.GL_TEXTURE_2D, blendID);
             gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer);
+            glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer2);
 
             /*
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
@@ -542,6 +554,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        
         /*
          * Usually, the first thing one might want to do is to clear
          * the screen. The most efficient way of doing this is to use
@@ -604,6 +617,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
         private FloatBuffer mFVertexBuffer;
         private FloatBuffer mTexBuffer;
+        private FloatBuffer mTexBuffer2;
         private ShortBuffer mIndexBuffer;
 
         public Rectangle() {
@@ -623,6 +637,10 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
             ByteBuffer tbb = ByteBuffer.allocateDirect(VERTS * 2 * 4);
             tbb.order(ByteOrder.nativeOrder());
             mTexBuffer = tbb.asFloatBuffer();
+
+            ByteBuffer tbb2 = ByteBuffer.allocateDirect(VERTS * 2 * 4);
+            tbb2.order(ByteOrder.nativeOrder());
+            mTexBuffer2 = tbb.asFloatBuffer();
 
             ByteBuffer ibb = ByteBuffer.allocateDirect(VERTS * 2);
             ibb.order(ByteOrder.nativeOrder());
