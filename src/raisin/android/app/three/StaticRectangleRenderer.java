@@ -337,6 +337,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
                     rectangle.mTexBuffer2.put(coords[i*3+j] * 1.0f + 0.5f);
                 }
             }
+            rectangle.mTexBuffer2.position(0);
 
 	        glActiveTexture(GL_TEXTURE1);
 	        gl.glClientActiveTexture(GL10.GL_TEXTURE1); 
@@ -355,13 +356,14 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
             glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
             glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
             */
-            
+
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
             glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);   //Interpolate RGB with RGB
             glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
             glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
             glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
             glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
+
             //------------------------
 
             /*
