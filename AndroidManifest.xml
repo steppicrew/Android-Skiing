@@ -87,6 +87,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".app.lesson8.Run" android:label="nehe lesson8">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.TEST" />
+            </intent-filter>
+        </activity>
+
     </application>
 
     <uses-sdk android:targetSdkVersion="7" android:minSdkVersion="7"/>

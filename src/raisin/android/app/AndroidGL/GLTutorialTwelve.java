@@ -7,6 +7,7 @@ import static android.opengl.GLES10.glBlendFunc;
 import static android.opengl.GLES10.glEnable;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import raisin.android.R;
 
@@ -41,6 +42,8 @@ public class GLTutorialTwelve extends GLTutorialBase {
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LEQUAL);
 		
+//		gl.glTexParameterf(GL_TEXTURE_2D, GL11.GL_TEXTURE_COMPARE_EXT, GL_TRUE);
+		
 		gl.glEnable(GL10.GL_TEXTURE_2D);
 		
 		gl.glClearColor(0.0f, 0.3f, 0.3f, 0.0f);
@@ -71,6 +74,8 @@ public class GLTutorialTwelve extends GLTutorialBase {
 		gl.glLoadIdentity();
 		GLU.gluLookAt(gl, 0, 0, 3, 0, 0, 0, 0, 1, 0);
 	
+		gl.glDisable(GL10.GL_DEPTH_TEST);	//Turn Depth Testing Off ( NEW )
+
 		gl.glRotatef(xrot, 1, 0, 0);
 		gl.glRotatef(yrot, 0, 1, 0);
 		

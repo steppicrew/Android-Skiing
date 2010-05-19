@@ -5,6 +5,9 @@
 
     <!--  Applets -->
 
+    <string name="author">Savas Ziplies</string>
+    <string name="website">http://www.insanitydesign.com/</string>
+
     <string name="activity_hello_world"><b>Hello <i>World</i></b></string>
     <string name="hello_world"><b>Hello, <i>Steppi-World!</i></b></string>
     <string name="first">First Tutorial : Black Screen</string>
