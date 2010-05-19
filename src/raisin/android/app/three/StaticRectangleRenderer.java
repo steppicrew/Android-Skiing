@@ -26,6 +26,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -96,7 +97,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
 
     
-	class Snowflake {
+	class Snowflake implements Comparable<Snowflake> {
 		private float posx;
 //		private float posy;
 		private float posz;
@@ -183,57 +184,15 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
             gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer);
 
-            float[] coords = {
-                    // X, Y, Z
-                    0.5f,  0.5f, 0,
-                     0.5f,  0.5f, 0,
-                    -0.5f, -0.5f, 0,
-                     0.5f, -0.5f, 0
-            };
-
-            for (int i = 0; i < 4; i++) {
-                for(int j = 0; j < 2; j++) {
-                    rectangle.mTexBuffer2.put(coords[i*3+j] * 1.0f + 0.5f);
-                }
-            }
-            rectangle.mTexBuffer2.position(0);
-
-	        gl.glClientActiveTexture(GL10.GL_TEXTURE1); 
-            gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer2);
-
-	        glActiveTexture(GL_TEXTURE1);
-	        glEnable(GL_TEXTURE_2D);
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, blendID);
-
-            
-            /*
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);   //Interpolate RGB with RGB
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            */
-
-            
             float colv= clamp(1 - posz, 0, 1);
             float[] col = { colv, colv, colv, 0.5f };
             glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, col, 0);
 
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
             glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-            // glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
+            glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
             glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_CONSTANT);
-            // glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            // glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
 
-            // glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_CONSTANT);
-            // glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_CONSTANT);
-            // glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_TEXTURE_ENV_COLOR);
-
-			
             long diff = SystemClock.uptimeMillis() - started;
 
 	        glPushMatrix();
@@ -277,6 +236,11 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 		
 		public boolean finished() {
 			return finished;
+		}
+
+		@Override
+		public int compareTo(Snowflake another) {
+			return (int)((this.posz - another.posz) * -1000);
 		}
 	}
 	
@@ -404,7 +368,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
         // float eyex= (float) Math.sin(SystemClock.uptimeMillis() / 1000f);
         
-        float eyex= clamp(ThreeRuntime.orientationX / -10f, -3f, 3f);
+        float eyex= clamp(ThreeRuntime.orientationX / 3f, -3f, 3f);
         float eyey= clamp(ThreeRuntime.orientationY / -20f, -1f, 1f);
         
         GLU.gluLookAt(gl, eyex, eyey, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
@@ -414,10 +378,11 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
         // glActiveTexture(GL_TEXTURE0);
 
+        Collections.sort(snowflakes);
+        
         for ( int i= 0; i < snowflakes.size(); i++ ) {
         	snowflakes.get(i).draw(gl);
         	if ( snowflakes.get(i).finished() ) snowflakes.get(i).restart();
-        	
         }
     }
 
