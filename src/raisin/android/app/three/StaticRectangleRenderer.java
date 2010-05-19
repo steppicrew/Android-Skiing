@@ -154,7 +154,6 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 		public void draw(GL10 gl) {
 
 /*
-			
 			gl.glEnable(GL10.GL_LIGHTING);
 			gl.glEnable(GL10.GL_LIGHT0);
 			gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, matAmbient, 0);
@@ -174,159 +173,19 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 			
 			gl.glEnable(GL10.GL_CULL_FACE);
 */
-			
-			
-			
-/*
-	        glActiveTexture(GL_TEXTURE0);
-
-
-            glBindTexture(GL_TEXTURE_2D, textureID);
-
-//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	        glDisable(GL_ALPHA_TEST);
-
-	        glActiveTexture(GL_TEXTURE1);
-
-            glBindTexture(GL_TEXTURE_2D, blendID);
-
-//	        glEnable(GL_BLEND);
-//	        glBlendFunc(GL_SRC_ALPHA,
-//	        		GL_ONE_MINUS_SRC_ALPHA);
-
-*/
-
-//            glActiveTexture(GL_TEXTURE0);
-//            glBindTexture(GL_TEXTURE_2D, textureID);
-
-//	        glEnable(GL_ALPHA_TEST);
-//	        glAlphaFunc(GL_GREATER, 0.1f);
-
-//            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-
-            //------------------------
-
-//            glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-			
-			
-			
-/*
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-			gl.glMatrixMode(GL10.GL_MODELVIEW);
-            glActiveTexture(GL_TEXTURE0);
-            gl.glClientActiveTexture(GL10.GL_TEXTURE0); 
-            gl.glEnable(GL10.GL_TEXTURE_2D); 
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, blendID); 
-	        glActiveTexture(GL_TEXTURE1);
-			gl.glClientActiveTexture(GL10.GL_TEXTURE1); 
-			gl.glEnable(GL10.GL_TEXTURE_2D); 
-    		gl.glBindTexture(GL10.GL_TEXTURE_2D, textureID); 
-    		gl.glTexEnvx(GL10.GL_TEXTURE_ENV , GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
-
-	        glActiveTexture(GL_TEXTURE0);
-*/
-			
-			
-//			glActiveTexture(GL_TEXTURE1);
-			
-			
-			
-//            gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-//            gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texBuff);
-
-            
             
             // http://www.gamedev.net/community/forums/topic.asp?topic_id=462270
-            // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
-            //glEnable(GL_BLEND);
-            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-//            glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
-
             
-
-/*
-    		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-    		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texBuff);
-*/
-
-    		
-    		
-
-
-            
-            // http://www.gamedev.net/community/forums/topic.asp?topic_id=462270
-            // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
-            //glEnable(GL_BLEND);
-            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-            // glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_ADD);
-
-
-//	        glEnable(GL_ALPHA_TEST);
-//	        glAlphaFunc(GL_GREATER, 0.1f);
-
-
-//	        glActiveTexture(GL_TEXTURE0);
-//	        glActiveTexture(GL_TEXTURE1);
-
-/*
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            
-            // Interpolate RGB with RGB
-
-            glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC2_RGB, GL_PREVIOUS);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
-*/
-
-            /*
-            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-
-            glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-
-            
-            
-
-            // Interpolate ALPHA with ALPHA
-            glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
-            glTexEnvf(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_TEXTURE);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-            glTexEnvf(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-*/
-            
-            
-            
-//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//            glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-			
-			
-
 	        glActiveTexture(GL_TEXTURE0);
-	        gl.glClientActiveTexture(GL10.GL_TEXTURE0); 
             glEnable(GL_TEXTURE_2D);
             gl.glBindTexture(GL10.GL_TEXTURE_2D, textureID);
+	        gl.glClientActiveTexture(GL10.GL_TEXTURE0); 
             gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer);
-            
 
             float[] coords = {
                     // X, Y, Z
-                    -0.5f,  0.5f, 0,
+                    0.5f,  0.5f, 0,
                      0.5f,  0.5f, 0,
                     -0.5f, -0.5f, 0,
                      0.5f, -0.5f, 0
@@ -339,70 +198,41 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
             }
             rectangle.mTexBuffer2.position(0);
 
-	        glActiveTexture(GL_TEXTURE1);
 	        gl.glClientActiveTexture(GL10.GL_TEXTURE1); 
-	        glEnable(GL_TEXTURE_2D);
-            gl.glBindTexture(GL10.GL_TEXTURE_2D, blendID);
             gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
             glTexCoordPointer(2, GL_FLOAT, 0, rectangle.mTexBuffer2);
 
-            /*
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);   //Interpolate RGB with RGB
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
-            */
+	        glActiveTexture(GL_TEXTURE1);
+	        glEnable(GL_TEXTURE_2D);
+            gl.glBindTexture(GL10.GL_TEXTURE_2D, blendID);
 
+            
+            /*
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
             glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);   //Interpolate RGB with RGB
             glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
             glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
             glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
             glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-
-            //------------------------
-
-            /*
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_INTERPOLATE);   //Interpolate ALPHA with ALPHA
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_ALPHA, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_ALPHA, GL_SRC_ALPHA);
-*/
-            
-            //gl.glTexEnvx(GL10.GL_TEXTURE_ENV , GL10.GL_TEXTURE_ENV_MODE, GL10.GL_MODULATE);
-            //glTexEnvx(GL10.GL_TEXTURE_ENV , GL11.GL_COMBINE_ALPHA, GL11.GL_SUBTRACT);
-            
-
-//            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-//            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+            */
 
             
-//            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            //Sample RGB, multiply by previous texunit result
+            float colv= clamp(1 - posz, 0, 1);
+            float[] col = { colv, colv, colv, 0.5f };
+            glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, col, 0);
 
-/*
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);   //Modulate RGB with RGB
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
+            // glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
             glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-*/
-            
-            //Sample ALPHA, multiply by previous texunit result
-            //glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);  //Modulate ALPHA with ALPHA
-            //glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PREVIOUS);
-            //glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_TEXTURE);
-            //glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-            //glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
+            glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_CONSTANT);
+            // glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
+            // glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
 
-			
+            // glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_CONSTANT);
+            // glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_CONSTANT);
+            // glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_TEXTURE_ENV_COLOR);
+
 			
             long diff = SystemClock.uptimeMillis() - started;
 
@@ -415,13 +245,13 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        float y= 2f - diff * speed + jittery;
 	        float z= posz;
 	        
-//	        glTranslatef(x, y, z);
+	        glTranslatef(x, y, z);
 
 	        float angle = angleSpeed * diff;
 	        glRotatef(angle, 0, 0, 1.0f);
 	        
 	        float scale= 0.3f * (1 - z);
-//	        glScalef(scale, scale, 1f);
+	        glScalef(scale, scale, 1f);
 	        
 	        rectangle.draw(gl);
 
@@ -537,7 +367,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
 	        bitmap.recycle();
         }
-        for ( int i= 0; i < 1; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
+        for ( int i= 0; i < 100; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
     }
 
     public void onDrawFrame(GL10 gl) {
@@ -642,7 +472,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
             ByteBuffer tbb2 = ByteBuffer.allocateDirect(VERTS * 2 * 4);
             tbb2.order(ByteOrder.nativeOrder());
-            mTexBuffer2 = tbb.asFloatBuffer();
+            mTexBuffer2 = tbb2.asFloatBuffer();
 
             ByteBuffer ibb = ByteBuffer.allocateDirect(VERTS * 2);
             ibb.order(ByteOrder.nativeOrder());
