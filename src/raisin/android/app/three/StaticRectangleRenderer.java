@@ -331,7 +331,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 	        GLUtils.texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
 	        bitmap.recycle();
         }
-        for ( int i= 0; i < 100; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
+        for ( int i= 0; i < 20; i++ ) snowflakes.add(new Snowflake(mTextureIDs));
     }
 
     public void onDrawFrame(GL10 gl) {

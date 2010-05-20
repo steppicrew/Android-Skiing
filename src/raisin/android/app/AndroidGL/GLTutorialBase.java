@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -284,6 +285,7 @@ public abstract class GLTutorialBase extends GLSurfaceView implements GLSurfaceV
 			}
 			Center centers[]= new Center[6];
 
+			Log.w("xrot", "" + xrot);
 			int coords_per_side= box.length / 6 / 3;
 			for (int i= 0; i < 6; i++) {
 				centers[i]= new Center(i);
@@ -303,10 +305,17 @@ public abstract class GLTutorialBase extends GLSurfaceView implements GLSurfaceV
 				final int x= 0;
 				final int y= 1;
 				final int z= 2;
-				centers[i].coords[y]= centers[i].coords[y] * cos_xrot + centers[i].coords[z] * sin_xrot;
-				centers[i].coords[z]= centers[i].coords[z] * cos_xrot - centers[i].coords[y] * sin_xrot;
-				centers[i].coords[x]= centers[i].coords[x] * cos_yrot + centers[i].coords[z] * sin_yrot;
-				centers[i].coords[z]= centers[i].coords[z] * cos_yrot - centers[i].coords[x] * sin_yrot;
+				
+				
+//				Log.w("i, y, z", "" + i + " - " + centers[i].coords[y] + " - " + centers[i].coords[z]);
+				double old_x= centers[i].coords[x];
+				double old_y= centers[i].coords[y];
+				double old_z= centers[i].coords[z];
+				centers[i].coords[y]= centers[i].coords[y] * cos_xrot - old_z * sin_xrot;
+				centers[i].coords[z]= centers[i].coords[z] * cos_xrot + old_y * sin_xrot;
+				centers[i].coords[x]= centers[i].coords[x] * cos_yrot + old_z * sin_yrot;
+				centers[i].coords[z]= old_z * cos_yrot - old_x * sin_yrot;
+//				Log.w("i, y, z", "" + i + " - " + centers[i].coords[y] + " - " + centers[i].coords[z]);
 			}
 			
 			int len= indices.length / 6;

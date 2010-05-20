@@ -30,14 +30,14 @@ public class GLTutorialTwelve extends GLTutorialBase {
 	}
 	
 	protected void init(GL10 gl) {
-		gl.glEnable(GL10.GL_LIGHTING);
-		gl.glEnable(GL10.GL_LIGHT0);
+//		gl.glEnable(GL10.GL_LIGHTING);
+//		gl.glEnable(GL10.GL_LIGHT0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT, matAmbient, 0);
 		gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, matDiffuse, 0);
 		
-		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, lightAmbient,	0);
-		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, lightDiffuse,	0);
-		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPos, 0);
+//		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, lightAmbient,	0);
+//		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, lightDiffuse,	0);
+//		gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, lightPos, 0);
 		
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL10.GL_LEQUAL);
@@ -104,6 +104,7 @@ public class GLTutorialTwelve extends GLTutorialBase {
 //		gl.glClientActiveTexture(GL10.GL_TEXTURE0); 
 		
 		xrot += 1.0f;
+//		xrot= 45.0f;
 		yrot += 0.5f;
 	}
 }
