@@ -368,7 +368,7 @@ public class StaticRectangleRenderer implements GLSurfaceView.Renderer{
 
         // float eyex= (float) Math.sin(SystemClock.uptimeMillis() / 1000f);
         
-        float eyex= clamp(ThreeRuntime.orientationX / 3f, -3f, 3f);
+        float eyex= clamp(ThreeRuntime.orientationX / 30f, -3f, 3f);
         float eyey= clamp(ThreeRuntime.orientationY / -20f, -1f, 1f);
         
         GLU.gluLookAt(gl, eyex, eyey, -5, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
